@@ -37,7 +37,8 @@
         case 'status-following':
           break;
         case 'follower-account':
-          dataack.notification = 'updated their account';
+          dataack.notification = 'updated their account ' + data.account.id;
+
           socket.emit('follow', {
             type: 'add',
             account: data.account
@@ -80,17 +81,6 @@
   accountBtn.onclick = function(ev) {
     ev.preventDefault();
 
-    // todo - replace with follow array
-    var followID = document.querySelector('#peer-id').value;
-    var conn = peer.connect(followID);
-
-    conn.on('open', function() {
-      conn.send({
-        type: 'follower-account',
-        account: account
-      });
-    });
-
     socket.emit('account', {
       name: document.querySelector('#acct-name').value || '?',
       bio: document.querySelector('#acct-bio').value || '?'
@@ -107,6 +97,10 @@
     var li;
 
     switch (data.type) {
+      case 'update':
+        li = document.querySelector('#id-' + data.id);
+        li.textContent = data.id + ': ' + data.name;
+        break;
       case 'add':
         if (document.querySelector('#id-' + data.id)) {
           break;
@@ -121,10 +115,9 @@
         break;
       case 'getAll':
         data.following.forEach(function(f) {
-          console.log(f)
           li = document.createElement('li');
-          li.textContent = f.id + ': ' + f.name;
-          li.id = 'id-' + f.id;
+          li.textContent = f.value.id + ': ' + f.value.name;
+          li.id = 'id-' + f.value.id;
           followed.appendChild(li);
         });
     }
@@ -135,6 +128,10 @@
     var li;
 
     switch (data.type) {
+      case 'update':
+        li = document.querySelector('#id-' + data.id);
+        li.textContent = data.id + ': ' + data.name;
+        break;
       case 'add':
         if (document.querySelector('#id-' + data.id)) {
           break;
@@ -166,12 +163,11 @@
 
   // Update the server with your new account changes
   socket.on('accountack', function(acct) {
-    document.querySelector('#acct-name').textContent = acct.name;
-    document.querySelector('#acct-bio').textContent = acct.bio;
-    account = {
-      name: acct.name,
-      bio: acct.bio
-    };
+    console.log('received account ack')
+    document.querySelector('#acct-name').value = acct.name;
+    document.querySelector('#acct-bio').value = acct.bio;
+    account.name = acct.name;
+    account.bio = acct.bio;
 
     // todo - replace with follow array
     var followID = document.querySelector('#peer-id').value;

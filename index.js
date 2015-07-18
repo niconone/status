@@ -112,7 +112,7 @@ server.start(function(err) {
           connections.addIDFollowing(socket, data);
           break;
         case 'remove':
-          connections.removeIDFollowing(socket, data.id);
+          connections.removeIDFollowing(socket, data.account.id);
           break;
         case 'getAll':
           connections.getAllFollowing(socket);
@@ -126,7 +126,7 @@ server.start(function(err) {
           connections.addIDFollower(socket, data);
           break;
         case 'remove':
-          connections.removeIDFollower(socket, data.id);
+          connections.removeIDFollower(socket, data.account.id);
           break;
         case 'getAll':
           connections.getAllFollowers(socket);
@@ -135,6 +135,7 @@ server.start(function(err) {
     });
 
     socket.on('account', function(data) {
+      console.log('updating account changes')
       account.update(socket, data);
     });
   });
