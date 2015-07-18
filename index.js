@@ -73,11 +73,6 @@ let routes = [
     method: 'GET',
     path: '/',
     handler: views.dashboard
-  },
-  {
-    method: 'GET',
-    path: '/id',
-    handler: views.getID
   }
 ];
 
@@ -107,6 +102,10 @@ server.start(function(err) {
     socket.on('identifier', function() {
       views.getID(socket);
       socket.emit('apiack', conf.get('peerKey'));
+    });
+
+    socket.on('follow', function(data) {
+      views.follow(socket, data);
     });
   });
 });

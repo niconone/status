@@ -3,29 +3,38 @@
 (function() {
   var socket = io();
 
-  var connectBtn = document.querySelector('#peer-connect');
+  var followBtn = document.querySelector('#peer-connect');
+  var followed = document.querySelector('#followed');
   var id;
   var peer;
   var apiKey;
 
   function connect(conn) {
-    console.log('attempting data');
     conn.on('data', function(data) {
-      console.log('received data');
       document.querySelector('#message').textContent = data;
       console.log('Received', data);
     });
 
-    conn.send('hello from ' + id);
+    conn.send('added you: ' + id);
   }
 
-  connectBtn.onclick = function(ev) {
+  function syncOnlineFollowers() {
+
+  }
+
+  followBtn.onclick = function(ev) {
     ev.preventDefault();
 
-    var conn = peer.connect(document.querySelector('#peer-id').value);
-    console.log(document.querySelector('#peer-id').value)
+    var followID = document.querySelector('#peer-id').value;
+
+    var conn = peer.connect(followID);
+
     conn.on('open', function() {
       connect(conn);
+      socket.emit('follow', {
+        id: followID,
+        bio: 'test'
+      });
     });
 
     conn.on('error', function(err) {
@@ -33,14 +42,20 @@
     });
   };
 
+  socket.on('apiack', function(peerKey) {
+    apiKey = peerKey;
+  });
+
+  socket.on('followack', function(followID) {
+    var li = document.createElement('li');
+    li.textContent = followID;
+    followed.appendChild(li);
+  });
+
   socket.on('identifierack', function(identifier) {
     id = identifier;
 
     document.querySelector('#identifier').textContent = identifier;
-  });
-
-  socket.on('apiack', function(peerKey) {
-    apiKey = peerKey;
   });
 
   socket.emit('identifier');

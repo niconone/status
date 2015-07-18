@@ -6,6 +6,10 @@ block content
   p test
 
   input(type='text', id='peer-id')
-  button(type='button', id='peer-connect') connect
+  button(type='button', id='peer-connect') follow
 
   #message no message
+
+  ul#followed
+    for follow in follows
+      li= follow.value

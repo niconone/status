@@ -1,0 +1,27 @@
+## data structure
+
+| key 				 							| what
+|					 									|
+| `faved!<timestamp>`				| { status metadata }
+| `follow!<identifier>`			| { user metadata }
+| `identifier`		 					| "unique id"
+| `profile`			 						| { user metadata }
+| `status!<timestamp>`			| { status metadata }
+
+## user metadata
+
+	{
+		id: <identifier>,
+		name: <name>,
+		bio: <bio>
+	}
+
+## status metadata
+
+	{
+		id: <id>,
+		created: <timestamp>,
+		messsage: <message>,
+		replyTo: <id>,
+		faved: true | false
+	}
