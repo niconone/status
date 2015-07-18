@@ -3,6 +3,7 @@
 const Hapi = require('hapi');
 const http = require('http');
 const conf = require('nconf');
+const SocketIO = require('socket.io');
 
 conf.argv().env().file({ file: 'config.json' });
 
@@ -72,6 +73,11 @@ let routes = [
     method: 'GET',
     path: '/',
     handler: views.dashboard
+  },
+  {
+    method: 'GET',
+    path: '/id',
+    handler: views.getID
   }
 ];
 
@@ -94,6 +100,15 @@ server.start(function(err) {
     console.error(err.message);
     process.exit(1);
   }
+
+  let io = SocketIO.listen(server.listener);
+
+  io.on('connection', function(socket) {
+    socket.on('identifier', function() {
+      views.getID(socket);
+      socket.emit('apiack', conf.get('peerKey'));
+    });
+  });
 });
 
 exports.getServer = function() {

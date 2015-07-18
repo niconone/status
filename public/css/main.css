@@ -1,0 +1,9 @@
+body {
+  padding: 0;
+  margin: 10px;
+}
+
+#identifier {
+  padding-left: 5px;
+  display: inline-block;
+}

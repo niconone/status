@@ -1,4 +1,8 @@
 {
+  "globals": {
+    "io": true,
+    "Peer": true
+  },
   "rules": {
     // These are the rules that have been configured so far to match the
     // devtools coding style.
