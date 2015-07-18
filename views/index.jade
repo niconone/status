@@ -1,9 +1,13 @@
 extends layout
 
 block content
-  p Your identifier is
-    span#identifier= identifier
-  p test
+  section
+    h2 account details
+    p Your identifier is
+      span#identifier= identifier
+    input(type='text', id='acct-name', placeholder='name')
+    input(type='text', id='acct-bio', placeholder='bio')
+    button(type='button', id='account-update') update
 
   input(type='text', id='peer-id')
   button(type='button', id='peer-connect') follow
@@ -11,5 +15,5 @@ block content
   #message no message
 
   ul#followed
-    for follow in follows
-      li= follow.value
+
+  ul#followers

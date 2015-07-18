@@ -2,8 +2,11 @@
 
 ## setup
 
-    npm install
     cp config.json.sample config.json
+
+[sign up for an apikey](http://peerjs.com/) and add it to `peerKey` in config.json
+
+    npm install
     npm start
 
 ## hi
@@ -11,4 +14,4 @@
 
 ## license
 
-  GPLv3
+GPLv3

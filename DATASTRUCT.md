@@ -3,7 +3,8 @@
 | key 				 							| what
 |					 									|
 | `faved!<timestamp>`				| { status metadata }
-| `follow!<identifier>`			| { user metadata }
+| `follow!<identifier>`			| { user metadata } // who you follow
+| `follower!<identifier>`		| { user metadata } // who follows you
 | `identifier`		 					| "unique id"
 | `profile`			 						| { user metadata }
 | `status!<timestamp>`			| { status metadata }

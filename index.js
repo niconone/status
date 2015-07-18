@@ -8,6 +8,8 @@ const SocketIO = require('socket.io');
 conf.argv().env().file({ file: 'config.json' });
 
 const views = require('./lib/views');
+const account = require('./lib/account');
+const connections = require('./lib/connections');
 
 const server = new Hapi.Server();
 
@@ -105,7 +107,35 @@ server.start(function(err) {
     });
 
     socket.on('follow', function(data) {
-      views.follow(socket, data);
+      switch (data.type) {
+        case 'add':
+          connections.addIDFollowing(socket, data);
+          break;
+        case 'remove':
+          connections.removeIDFollowing(socket, data.id);
+          break;
+        case 'getAll':
+          connections.getAllFollowing(socket);
+          break;
+      }
+    });
+
+    socket.on('follower', function(data) {
+      switch (data.type) {
+        case 'add':
+          connections.addIDFollower(socket, data);
+          break;
+        case 'remove':
+          connections.removeIDFollower(socket, data.id);
+          break;
+        case 'getAll':
+          connections.getAllFollowers(socket);
+          break;
+      }
+    });
+
+    socket.on('account', function(data) {
+      account.update(socket, data);
     });
   });
 });
