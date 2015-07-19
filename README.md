@@ -9,7 +9,7 @@
     npm install
     npm start
 
-## hi
+## hey
 ![](https://dl.dropboxusercontent.com/u/37968874/gifs/cat-typing-hacking-keyboard-computer.gif)
 
 ## license
