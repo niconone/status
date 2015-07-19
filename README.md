@@ -25,7 +25,7 @@ load [http://localhost:4000](http://localhost:4000)
 
 now you will be able to test talking to two different servers.
 
-## hey
+## cat
 ![](https://dl.dropboxusercontent.com/u/37968874/gifs/cat-typing-hacking-keyboard-computer.gif)
 
 ## license
