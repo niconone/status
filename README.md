@@ -9,6 +9,8 @@
     npm install
     npm start
 
+load [http://localhost:3000](http://localhost:3000)
+
 ## testing locally
 
     cp -R status status2
@@ -18,6 +20,8 @@
 edit status2/config.json to have a different port from 3000, such as 4000
 
     npm start
+
+load [http://localhost:4000](http://localhost:4000)
 
 now you will be able to test talking to two different servers.
 
