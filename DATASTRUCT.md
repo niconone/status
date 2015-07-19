@@ -22,7 +22,7 @@
 	{
 		id: <id>,
 		created: <timestamp>,
-		messsage: <message>,
+		account: { user metadata },
 		replyTo: <id>,
 		faved: true | false
 	}
