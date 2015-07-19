@@ -18,7 +18,7 @@ h2 {
 }
 
 form, ul {
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 ul {
@@ -77,4 +77,17 @@ ul {
 #feed li {
   width: 100%;
   background-color: #fff;
+  float: left;
+  clear: both;
+  margin-bottom: 5px;
+}
+
+#feed li time {
+  font-style: italic;
+  padding: 5px 2px 0 2px;
+  display: inline-block;
+}
+
+#feed li p {
+  padding: 0 19px;
 }
