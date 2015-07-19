@@ -8,7 +8,25 @@ section {
   background-color: #f3f3f3;
   border-bottom: 2px solid #4fffb2;
   margin: 5px 0;
-  padding: 20px;
+  float: left;
+}
+
+h2 {
+  font-weight: 100;
+  font-size: 1.2rem;
+  padding: 0 10px;
+}
+
+form, ul {
+  padding: 0 20px;
+}
+
+ul {
+  list-style-type: none;
+}
+
+#wrapper {
+  min-width: 800px;
 }
 
 #identifier {
@@ -19,4 +37,44 @@ section {
 #status-message {
   width: 70%;
   font-size: 1.2rem;
+}
+
+.content {
+  float: left;
+  width: 100%;
+  position: relative;
+}
+
+.left, .right {
+  height: 120px;
+  margin-bottom: 5px;
+}
+
+.left {
+  float: left;
+  width: 64%;
+}
+
+.right {
+  float: right;
+  width: 35%;
+}
+
+#status {
+  width: 100%;
+}
+
+#feed {
+  width: 64%;
+  margin-right: 1%;
+}
+
+#follows {
+  width: 35%;
+  float: right;
+}
+
+#feed li {
+  width: 100%;
+  background-color: #fff;
 }

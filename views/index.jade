@@ -2,29 +2,30 @@ extends layout
 
 block content
   #message no message
-  section
-    h2 account details
-    p Your identifier is
-      span#identifier= identifier
-    input(type='text', id='acct-name', placeholder='name')
-    input(type='text', id='acct-bio', placeholder='bio')
-    button(type='button', id='account-update') update
+  .content
+    section.left
+      h2 account details
+      p Your identifier is
+        span#identifier= identifier
+      input(type='text', id='acct-name', placeholder='name')
+      input(type='text', id='acct-bio', placeholder='bio')
+      button(type='button', id='account-update') update
 
-  section
-    h2 follow a new identifier
-    input(type='text', id='peer-id')
-    button(type='button', id='peer-connect') follow
+    section.right
+      h2 follow a new identifier
+      input(type='text', id='peer-id')
+      button(type='button', id='peer-connect') follow
 
-  section
+  section#status
     h2 status update
     input(type='text', id='status-message', placeholder='enter status update', required)
     button(type='button', id='status-send') send to connected parties
 
-  section
+  section#feed
     h2 feed
     ul#statuses
 
-  section
+  section#follows
     h2 following
     ul#followed
 
