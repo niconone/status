@@ -24,7 +24,7 @@
 
       switch (data.type) {
         case 'follow-add':
-          dataack.notification = '(following) added you ' + data.account;
+          dataack.notification = '(following) added you ' + data.account.id;
           followingList[data.account.id] = data.account;
 
           socket.emit('follow', {
@@ -33,7 +33,7 @@
           });
           break;
         case 'follow-remove':
-          dataack.notification = '(following) removed you ' + data.account;
+          dataack.notification = '(following) removed you ' + data.account.id;
           delete followingList[data.account.id];
 
           socket.emit('follow', {
@@ -42,7 +42,7 @@
           });
           break;
         case 'follower-add':
-          dataack.notification = '(follower) added you ' + data.account;
+          dataack.notification = '(follower) added you ' + data.account.id;
           followerList[data.account.id] = data.account;
 
           socket.emit('follower', {
@@ -51,7 +51,7 @@
           });
           break;
         case 'follower-remove':
-          dataack.notification = '(follower) removed you ' + data.account;
+          dataack.notification = '(follower) removed you ' + data.account.id;
           delete followerList[data.account.id];
 
           socket.emit('follower', {
@@ -173,6 +173,18 @@
     var status = data.status;
 
     switch (data.type) {
+      case 'status.getAll':
+        data.statuses.forEach(function(s) {
+          li = document.createElement('li');
+          time = document.createElement('time');
+          time.textContent = s.value.created;
+          p = document.createElement('p');
+          p.textContent = s.value.account.name + ': ' + s.value.status;
+          li.appendChild(time);
+          li.appendChild(p);
+          statuses.appendChild(li);
+        });
+        break;
       case 'status.add':
         if (account.id == status.account.id) {
           console.log(data.type, ': your status add is being sent to connected followers ', data);
@@ -195,7 +207,7 @@
         p.textContent = status.account.name + ': ' + status.status;
         li.appendChild(time);
         li.appendChild(p);
-        statuses.appendChild(li);
+        statuses.insertBefore(li, statuses.firstChild);
         break;
       case 'status.remove':
         if (account.id == status.account.id) {
@@ -266,8 +278,8 @@
 
     switch (data.type) {
       case 'follower.update':
-        console.log(data.type, ': follower updating account and sending a notfiication ', acct);
-        li = followers.querySelector('#follower-id-' + acct.id);
+        console.log(data.type, ': follower updating account and sending a notification ', acct);
+        li = document.querySelector('#follower-id-' + acct.id);
         li.textContent = acct.id + ': ' + acct.name;
         break;
       case 'follower.add':
@@ -312,6 +324,8 @@
   socket.on('accountack', function(data) {
     switch (data.type) {
       case 'account.get':
+        document.querySelector('#acct-name').value = data.account.name;
+        document.querySelector('#acct-bio').value = data.account.bio;
         account.name = data.account.name;
         account.bio = data.account.bio;
         break;
@@ -357,6 +371,11 @@
   // Get your follower list
   socket.emit('follower', {
     type: 'follower.getAll'
+  });
+
+  // Get feed
+  socket.emit('status', {
+    type: 'status.getAll'
   });
 
   // Let's wait until we get all that server data via websockets before we access it

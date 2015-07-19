@@ -143,6 +143,9 @@ server.start(function(err) {
 
     socket.on('status', function(data) {
       switch (data.type) {
+        case 'status.getAll':
+          statuses.getAll(socket);
+          break;
         case 'status.add':
           statuses.add(socket, data);
           break;
