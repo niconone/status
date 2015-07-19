@@ -10,6 +10,7 @@ conf.argv().env().file({ file: 'config.json' });
 const views = require('./lib/views');
 const account = require('./lib/account');
 const connections = require('./lib/connections');
+const statuses = require('./lib/statuses');
 
 const server = new Hapi.Server();
 
@@ -108,13 +109,16 @@ server.start(function(err) {
 
     socket.on('follow', function(data) {
       switch (data.type) {
-        case 'add':
+        case 'follow.update':
+          connections.updateAccountFollowing(socket, data);
+          break;
+        case 'follow.add':
           connections.addIDFollowing(socket, data);
           break;
-        case 'remove':
+        case 'follow.remove':
           connections.removeIDFollowing(socket, data.account.id);
           break;
-        case 'getAll':
+        case 'follow.getAll':
           connections.getAllFollowing(socket);
           break;
       }
@@ -122,21 +126,42 @@ server.start(function(err) {
 
     socket.on('follower', function(data) {
       switch (data.type) {
-        case 'add':
+        case 'follower.update':
+          connections.updateAccountFollower(socket, data);
+          break;
+        case 'follower.add':
           connections.addIDFollower(socket, data);
           break;
-        case 'remove':
+        case 'follower.remove':
           connections.removeIDFollower(socket, data.account.id);
           break;
-        case 'getAll':
+        case 'follower.getAll':
           connections.getAllFollowers(socket);
           break;
       }
     });
 
+    socket.on('status', function(data) {
+      switch (data.type) {
+        case 'status.add':
+          statuses.add(socket, data);
+          break;
+        case 'status.remove':
+          // todo
+          break;
+      }
+    });
+
     socket.on('account', function(data) {
-      console.log('updating account changes')
-      account.update(socket, data);
+      switch (data.type) {
+        case 'account.get':
+          account.get(socket);
+          break;
+        case 'account.update':
+          console.log('updating account changes')
+          account.update(socket, data);
+          break;
+      }
     });
   });
 });

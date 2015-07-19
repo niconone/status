@@ -7,10 +7,13 @@
   var followed = document.querySelector('#followed');
   var followers = document.querySelector('#followers');
   var accountBtn = document.querySelector('#account-update');
+  var statusBtn = document.querySelector('#status-send');
+  var statuses = document.querySelector('#statuses');
   var account = {};
+  var followingList = {};
+  var followerList = {};
 
   var apiKey;
-  var id;
   var peer;
 
   function connect(conn) {
@@ -21,31 +24,72 @@
 
       switch (data.type) {
         case 'follow-add':
-          dataack.notification = 'added you ' + data.account.id;
+          dataack.notification = '(following) added you ' + data.account;
+          followingList[data.account.id] = data.account;
+
+          socket.emit('follow', {
+            type: 'follow.add',
+            account: data.account
+          });
           break;
         case 'follow-remove':
-          dataack.notification = 'removed you';
+          dataack.notification = '(following) removed you ' + data.account;
+          delete followingList[data.account.id];
+
+          socket.emit('follow', {
+            type: 'follow.remove',
+            account: data.account
+          });
           break;
         case 'follower-add':
-          dataack.notification = 'someone you follow added you';
+          dataack.notification = '(follower) added you ' + data.account;
+          followerList[data.account.id] = data.account;
+
+          socket.emit('follower', {
+            type: 'follower.add',
+            account: data.account
+          });
           break;
         case 'follower-remove':
-          dataack.notification = 'someone you follow removed you';
+          dataack.notification = '(follower) removed you ' + data.account;
+          delete followerList[data.account.id];
+
+          socket.emit('follower', {
+            type: 'follower.remove',
+            account: data.account
+          });
           break;
-        case 'status-follower':
+        case 'status-add':
+          dataack.notification = 'status add ' + data.status;
+
+          socket.emit('status', {
+            type: 'status.add',
+            status: data.status
+          });
           break;
-        case 'status-following':
+        case 'status-remove':
+          dataack.notification = 'status remove ' + data.status;
+          break;
+        case 'follow-account':
+          dataack.notification = 'updated their account ' + data.account.id;
+          followingList[data.account.id] = data.account;
+
+          socket.emit('follow', {
+            type: 'follow.update',
+            account: data.account
+          });
           break;
         case 'follower-account':
           dataack.notification = 'updated their account ' + data.account.id;
+          followerList[data.account.id] = data.account;
 
-          socket.emit('follow', {
-            type: 'add',
+          socket.emit('follower', {
+            type: 'follower.update',
             account: data.account
           });
           break;
       }
-      console.log('------- ', data, dataack)
+
       document.querySelector('#message').textContent = dataack.notification;
       console.log('Received', data);
     });
@@ -57,10 +101,12 @@
 
     var followID = document.querySelector('#peer-id').value;
     var conn = peer.connect(followID);
+    console.log('attempting to follow an account ', followID);
 
     conn.on('open', function() {
+      console.log('notify followee of add ', followID);
       conn.send({
-        type: 'follow-add',
+        type: 'follower-add',
         account: account
       });
     });
@@ -69,55 +115,145 @@
       console.log(err);
     });
 
+    console.log('update local following list with followee ', followID);
     socket.emit('follow', {
-      type: 'add',
+      type: 'follow.add',
       account: {
         id: followID
       }
     });
+
+    document.querySelector('#peer-id').value = '';
   };
 
   // Update your public account details
   accountBtn.onclick = function(ev) {
     ev.preventDefault();
 
+    console.log('attempting to update account details');
     socket.emit('account', {
-      name: document.querySelector('#acct-name').value || '?',
-      bio: document.querySelector('#acct-bio').value || '?'
+      type: 'account.update',
+      account: {
+        name: document.querySelector('#acct-name').value || '?',
+        bio: document.querySelector('#acct-bio').value || '?'
+      }
     });
+  };
+
+  // Send a status update
+  statusBtn.onclick = function(ev) {
+    ev.preventDefault();
+
+    console.log('attempting to send a status update to connected followers');
+    socket.emit('status', {
+      type: 'status.add',
+      status: {
+        status: document.querySelector('#status-message').value,
+        account: account
+      }
+    });
+
+    document.querySelector('#status-message').value = '';
   };
 
   // Returns api key from the server
   socket.on('apiack', function(peerKey) {
+    console.log('received peerjs apiKey ', peerKey);
     apiKey = peerKey;
+  });
+
+  // Notifications from status updates
+  socket.on('statusack', function(data) {
+    var f;
+    var conn;
+    var li;
+    var time;
+    var p;
+
+    var status = data.status;
+
+    switch (data.type) {
+      case 'status.add':
+        if (account.id == status.account.id) {
+          console.log(data.type, ': your status add is being sent to connected followers ', data);
+          for (f in followerList) {
+            conn = peer.connect(f);
+
+            conn.on('open', function() {
+              conn.send({
+                type: 'status-add',
+                status: status
+              });
+            });
+          }
+        }
+
+        li = document.createElement('li');
+        time = document.createElement('time');
+        time.textContent = data.status.created;
+        p = document.createElement('p');
+        p.textContent = status.account.name + ': ' + status.status;
+        li.appendChild(time);
+        li.appendChild(p);
+        statuses.appendChild(li);
+        break;
+      case 'status.remove':
+        if (account.id == status.account.id) {
+          console.log(data.type, ': your status remove is being sent to connected followers ', data);
+          for (f in followerList) {
+            conn = peer.connect(f);
+
+            conn.on('open', function() {
+              conn.send({
+                type: 'status-remove',
+                status: status.status
+              });
+            });
+          }
+        }
+
+        // todo - remove message
+        break;
+    }
   });
 
   // Notifications from following
   socket.on('followack', function(data) {
     var li;
+    var acct = data.account;
 
     switch (data.type) {
-      case 'update':
-        li = document.querySelector('#id-' + data.id);
-        li.textContent = data.id + ': ' + data.name;
+      case 'follow.update':
+        console.log(data.type, ': updating acct and sending followers a notification ', acct);
+        li = document.querySelector('#follow-id-' + acct.id);
+        li.textContent = acct.id + ': ' + acct.name;
         break;
-      case 'add':
-        if (document.querySelector('#id-' + data.id)) {
+      case 'follow.add':
+        console.log(data.type, ': following acct and sending them a notification ', acct);
+        if (document.querySelector('#follow-id-' + acct.id)) {
           break;
         }
         li = document.createElement('li');
-        li.textContent = data.id + ': ' + data.name;
-        li.id = 'id-' + data.id;
+        li.textContent = acct.id + ': ' + acct.name;
+        li.id = 'follow-id-' + acct.id;
         followed.appendChild(li);
         break;
-      case 'remove':
-        followed.removeChild('id-' + data.id);
+      case 'follow.remove':
+        console.log(data.type, ': unfollowing acct and sending them a notification', acct);
+        followed.removeChild('follow-id-' + acct.id);
         break;
-      case 'getAll':
+      case 'follow.getAll':
+        console.log(data.type, ': getting all following ', data.following);
+
+        while (followers.hasChildNodes()) {
+          followed.removeChild(followed.firstChild);
+        }
+
         data.following.forEach(function(f) {
+          followingList[f.value.id] = f.value;
           li = document.createElement('li');
           li.textContent = f.value.id + ': ' + f.value.name;
-          li.id = 'id-' + f.value.id;
+          li.id = 'follow-id-' + f.value.id;
           followed.appendChild(li);
         });
     }
@@ -126,29 +262,40 @@
   // Notifications from followers
   socket.on('followerack', function(data) {
     var li;
+    var acct = data.account;
 
     switch (data.type) {
-      case 'update':
-        li = document.querySelector('#id-' + data.id);
-        li.textContent = data.id + ': ' + data.name;
+      case 'follower.update':
+        console.log(data.type, ': follower updating account and sending a notfiication ', acct);
+        li = followers.querySelector('#follower-id-' + acct.id);
+        li.textContent = acct.id + ': ' + acct.name;
         break;
-      case 'add':
-        if (document.querySelector('#id-' + data.id)) {
+      case 'follower.add':
+        console.log(data.type, ': follower added you and is sending a notification ', acct);
+        if (document.querySelector('#follower-id-' + acct.id)) {
           break;
         }
         li = document.createElement('li');
-        li.textContent = data.id + ': ' + data.name;
-        li.id = 'id-' + data.id;
+        li.textContent = acct.id + ': ' + acct.name;
+        li.id = 'id-' + acct.id;
         followers.appendChild(li);
         break;
-      case 'remove':
-        followers.removeChild('id-' + data.id);
+      case 'follower.remove':
+        console.log(data.type, ': follower removed you and is sending a notification ', acct);
+        followers.removeChild('follower-id-' + acct.id);
         break;
-      case 'getAll':
+      case 'follower.getAll':
+        console.log(data.type, ': getting all followers ', data.followers);
+
+        while (followers.hasChildNodes()) {
+          followers.removeChild(followers.firstChild);
+        }
+
         data.followers.forEach(function(f) {
+          followerList[f.value.id] = f.value;
           li = document.createElement('li');
-          li.textContent = f.id + ': ' + f.name;
-          li.id = 'id-' + f.id;
+          li.textContent = f.value.id + ': ' + f.value.name;
+          li.id = 'follower-id-' + f.value.id;
           followers.appendChild(li);
         });
     }
@@ -156,47 +303,66 @@
 
   // Returns your identifier id
   socket.on('identifierack', function(identifier) {
-    id = identifier;
-    account.id = id;
+    console.log('received identifier ', identifier);
+    account.id = identifier;
     document.querySelector('#identifier').textContent = identifier;
   });
 
   // Update the server with your new account changes
-  socket.on('accountack', function(acct) {
-    console.log('received account ack')
-    document.querySelector('#acct-name').value = acct.name;
-    document.querySelector('#acct-bio').value = acct.bio;
-    account.name = acct.name;
-    account.bio = acct.bio;
+  socket.on('accountack', function(data) {
+    switch (data.type) {
+      case 'account.get':
+        account.name = data.account.name;
+        account.bio = data.account.bio;
+        break;
+      case 'account.update':
+        console.log('account details updated ', data.account);
+        document.querySelector('#acct-name').value = data.account.name;
+        document.querySelector('#acct-bio').value = data.account.bio;
+        account.name = data.account.name;
+        account.bio = data.account.bio;
 
-    // todo - replace with follow array
-    var followID = document.querySelector('#peer-id').value;
-    var conn = peer.connect(followID);
+        for (var f in followerList) {
+          var conn = peer.connect(f);
 
-    conn.on('open', function() {
-      conn.send({
-        type: 'follower-account',
-        account: account
-      });
-    });
+          conn.on('open', function() {
+            conn.send({
+              type: 'follower-account',
+              account: data.account
+            });
+
+            conn.send({
+              type: 'follow-account',
+              account: data.account
+            });
+          });
+        }
+        break;
+    }
   });
 
   // Ask for your identifier from the server
   socket.emit('identifier');
 
+  // Get account details
+  socket.emit('account', {
+    type: 'account.get'
+  });
+
   // Get your following list
   socket.emit('follow', {
-    type: 'getAll'
+    type: 'follow.getAll'
   });
 
   // Get your follower list
   socket.emit('follower', {
-    type: 'getAll'
+    type: 'follower.getAll'
   });
 
-  // Let's wait until we get all that server data before we access it
+  // Let's wait until we get all that server data via websockets before we access it
   setTimeout(function() {
-    peer = new Peer(id, {key: apiKey});
+    console.log('connecting to peerjs server');
+    peer = new Peer(account.id, {key: apiKey});
     peer.on('connection', connect);
-  }, 200);
+  }, 500);
 }).call(this);

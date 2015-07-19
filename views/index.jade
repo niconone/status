@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  #message no message
   section
     h2 account details
     p Your identifier is
@@ -9,11 +10,23 @@ block content
     input(type='text', id='acct-bio', placeholder='bio')
     button(type='button', id='account-update') update
 
-  input(type='text', id='peer-id')
-  button(type='button', id='peer-connect') follow
+  section
+    h2 follow a new identifier
+    input(type='text', id='peer-id')
+    button(type='button', id='peer-connect') follow
 
-  #message no message
+  section
+    h2 status update
+    input(type='text', id='status-message', placeholder='enter status update', required)
+    button(type='button', id='status-send') send to connected parties
 
-  ul#followed
+  section
+    h2 feed
+    ul#statuses
 
-  ul#followers
+  section
+    h2 following
+    ul#followed
+
+    h2 followers
+    ul#followers

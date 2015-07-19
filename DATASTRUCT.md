@@ -7,7 +7,7 @@
 | `follower!<identifier>`		| { user metadata } // who follows you
 | `identifier`		 					| "unique id"
 | `profile`			 						| { user metadata }
-| `status!<timestamp>`			| { status metadata }
+| `status!<timestamp>!<id>`	| { status metadata }
 
 ## user metadata
 
@@ -22,7 +22,8 @@
 	{
 		id: <id>,
 		created: <timestamp>,
-		messsage: <message>,
+		status: <message>,
+		account: { user metadata }
 		replyTo: <id>,
 		faved: true | false
 	}
