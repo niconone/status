@@ -381,7 +381,7 @@
   // Let's wait until we get all that server data via websockets before we access it
   setTimeout(function() {
     console.log('connecting to peerjs server');
-    peer = new Peer(account.id, {key: apiKey});
+    peer = new Peer(account.id, {key: apiKey, debug: 3});
     peer.on('connection', connect);
   }, 500);
 }).call(this);
