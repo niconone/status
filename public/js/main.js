@@ -112,7 +112,7 @@
     });
 
     conn.on('error', function(err) {
-      console.log(err);
+      console.log('ERROR: ', err);
     });
 
     console.log('update local following list with followee ', followID);
@@ -155,12 +155,6 @@
 
     document.querySelector('#status-message').value = '';
   };
-
-  // Returns api key from the server
-  socket.on('apiack', function(peerKey) {
-    console.log('received peerjs apiKey ', peerKey);
-    apiKey = peerKey;
-  });
 
   // Notifications from status updates
   socket.on('statusack', function(data) {
@@ -206,6 +200,10 @@
                 status: status
               });
             });
+
+            conn.on('error', function(err) {
+              console.log('ERROR: ', err);
+            });
           }
         }
 
@@ -222,6 +220,10 @@
                 type: 'status-remove',
                 status: status.status
               });
+            });
+
+            conn.on('error', function(err) {
+              console.log('ERROR: ', err);
             });
           }
         }
@@ -315,13 +317,6 @@
     }
   });
 
-  // Returns your identifier id
-  socket.on('identifierack', function(identifier) {
-    console.log('received identifier ', identifier);
-    account.id = identifier;
-    document.querySelector('#identifier').textContent = identifier;
-  });
-
   // Update the server with your new account changes
   socket.on('accountack', function(data) {
     switch (data.type) {
@@ -352,13 +347,14 @@
               account: data.account
             });
           });
+
+          conn.on('error', function(err) {
+            console.log('ERROR: ', err);
+          });
         }
         break;
     }
   });
-
-  // Ask for your identifier from the server
-  socket.emit('identifier');
 
   // Get account details
   socket.emit('account', {
@@ -380,10 +376,31 @@
     type: 'status.getAll'
   });
 
+  // Get identifier;
+  socket.emit('identifier');
+
+  // Returns your identifier id
+  socket.on('identifierack', function(identifier) {
+    console.log('received identifier ', identifier);
+    account.id = identifier;
+    document.querySelector('#identifier').textContent = identifier;
+    socket.emit('api');
+  });
+
+  // Returns api key from the server
   // Let's wait until we get all that server data via websockets before we access it
-  setTimeout(function() {
+  socket.on('apiack', function(peerKey) {
+    console.log('received peerjs apiKey ', peerKey);
+    apiKey = peerKey;
     console.log('connecting to peerjs server');
     peer = new Peer(account.id, {key: apiKey, debug: 3});
     peer.on('connection', connect);
-  }, 500);
+    peer.on('error', function(err) {
+      console.log('ERROR: ', err);
+      setTimeout(function() {
+        console.log('Connecting failed, attempting to reconnect...');
+        peer.reconnect();
+      }, 1000);
+    });
+  });
 }).call(this);
