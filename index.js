@@ -104,6 +104,9 @@ server.start(function(err) {
   io.on('connection', function(socket) {
     socket.on('identifier', function() {
       views.getID(socket);
+    });
+
+    socket.on('api', function() {
       socket.emit('apiack', conf.get('peerKey'));
     });
 

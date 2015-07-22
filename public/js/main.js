@@ -396,11 +396,14 @@
     peer = new Peer(account.id, {key: apiKey, debug: 3});
     peer.on('connection', connect);
     peer.on('error', function(err) {
-      console.log('ERROR: ', err);
-      setTimeout(function() {
-        console.log('Connecting failed, attempting to reconnect...');
-        peer.reconnect();
-      }, 1000);
+      console.log('ERROR: ', err.type);
+
+      if (err.type == 'unavailable-id') {
+        setTimeout(function() {
+          console.log('Connecting failed, attempting to reconnect...');
+          socket.emit('api');
+        }, 2000);
+      }
     });
   });
 }).call(this);
