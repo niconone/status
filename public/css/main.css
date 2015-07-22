@@ -1,27 +1,70 @@
 body {
   padding: 0;
-  margin: 10px;
-  font-family: Helvetica, Arial, sans-serif;
+  margin: 0px;
+  font-family: Muli, Arial, sans-serif;
 }
 
 section {
-  background-color: #f3f3f3;
-  border-bottom: 2px solid #4fffb2;
-  margin: 5px 0;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAFUlEQVQYlWNgoAZ49OjRGcoUDAsrAMzQFK3d6aBdAAAAAElFTkSuQmCC);
+  margin: 3px 0;
   float: left;
+  box-shadow: #f1f1f1 1px 1px 0;
+}
+
+header, h2 {
+  background-color: #fff;
+  display: inline-block;
+  color: #111;
+  font-weight: 100;
+  font-size: 1rem;
+  padding: 2px 10px;
 }
 
 h2 {
-  font-weight: 100;
-  font-size: 1.2rem;
-  padding: 0 10px;
+  margin: 0;
+  float: left;
+}
+
+a {
+  color: #26d3e7;
+}
+
+textarea, input, button {
+  border: 1px solid #26d3e7;
+}
+
+button {
+  background-color: #26d3e7;
+  font-size: 1.1rem;
+}
+
+#identifier {
+  padding: 10px 0;
+}
+
+input[type=text] {
+  padding: 2px;
+  font-family: Muli, Arial, sans-serif;
+  font-size: 1.1rem;
+  margin: 5px 2px;
 }
 
 form, ul {
   padding: 0 10px;
 }
 
-ul {
+textarea {
+  height: 100px;
+  width: 100%;
+  max-width: 700px;
+  min-height: 50px;
+  max-height: 300px;
+  resize: vertical;
+  font-family: Muli, Arial, sans-serif;
+  padding: 5px;
+}
+
+#feed, #statuses {
   list-style-type: none;
 }
 
@@ -35,7 +78,7 @@ ul {
 }
 
 #status-message {
-  width: 70%;
+  width: 64%;
   font-size: 1.2rem;
 }
 
@@ -43,35 +86,27 @@ ul {
   float: left;
   width: 100%;
   position: relative;
+  height: 100px;
+  margin-bottom: 5px;
 }
 
 .left, .right {
-  height: 120px;
   margin-bottom: 5px;
+  height: 100%;
 }
 
 .left {
   float: left;
-  width: 64%;
+  width: 65%;
 }
 
 .right {
   float: right;
-  width: 35%;
+  width: 33%;
 }
 
 #status {
   width: 100%;
-}
-
-#feed {
-  width: 64%;
-  margin-right: 1%;
-}
-
-#follows {
-  width: 35%;
-  float: right;
 }
 
 #feed li {
@@ -84,10 +119,34 @@ ul {
 
 #feed li time {
   font-style: italic;
-  padding: 5px 2px 0 2px;
+  padding: 10px;
   display: inline-block;
 }
 
 #feed li p {
   padding: 0 19px;
+}
+
+#follows li, #follows ul {
+  float: left;
+  clear: both;
+}
+
+#follows ul {
+  width: 100%;
+  padding: 0;
+}
+
+#follows li {
+  font-size: 0.8rem;
+}
+
+#follows li {
+  width: 100%;
+  float: left;
+  clear: both;
+}
+
+#followed, #followers {
+  list-style-type: none;
 }

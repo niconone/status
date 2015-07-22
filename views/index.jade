@@ -5,11 +5,12 @@ block content
   .content
     section.left
       h2 account details
-      p Your identifier is
+      div Your identifier is
         span#identifier= identifier
-      input(type='text', id='acct-name', placeholder='name')
-      input(type='text', id='acct-bio', placeholder='bio')
-      button(type='button', id='account-update') update
+      #profile
+        input(type='text', id='acct-name', placeholder='name')
+        input(type='text', id='acct-bio', placeholder='bio')
+        button(type='button', id='account-update') update
 
     section.right
       h2 follow a new identifier
@@ -17,15 +18,14 @@ block content
       button(type='button', id='peer-connect') follow
 
   section#status
-    h2 status update
-    input(type='text', id='status-message', placeholder='enter status update', required)
+    textarea(type='text', id='status-message', placeholder='enter status update', required)
     button(type='button', id='status-send') send to connected parties
 
-  section#feed
+  section#feed.left
     h2 feed
     ul#statuses
 
-  section#follows
+  section#follows.right
     h2 following
     ul#followed
 

@@ -2,6 +2,8 @@
 
 ## setup
 
+Install [iojs](https://iojs.org) or [babel](https://babeljs.io)
+
     cp config.json.sample config.json
 
 [sign up for an apikey](http://peerjs.com/) and add it to `peerKey` in config.json
