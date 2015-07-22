@@ -172,17 +172,26 @@
 
     var status = data.status;
 
+    function generateStatus(status, type) {
+      li = document.createElement('li');
+      time = document.createElement('time');
+      time.textContent = moment(status.created).fromNow();
+      p = document.createElement('p');
+      p.innerHTML = status.account.name + ': ' + status.status;
+      li.appendChild(time);
+      li.appendChild(p);
+
+      if (type === 'add') {
+        statuses.insertBefore(li, statuses.firstChild);
+      } else {
+        statuses.appendChild(li);
+      }
+    }
+
     switch (data.type) {
       case 'status.getAll':
         data.statuses.forEach(function(s) {
-          li = document.createElement('li');
-          time = document.createElement('time');
-          time.textContent = s.value.created;
-          p = document.createElement('p');
-          p.textContent = s.value.account.name + ': ' + s.value.status;
-          li.appendChild(time);
-          li.appendChild(p);
-          statuses.appendChild(li);
+          generateStatus(s.value);
         });
         break;
       case 'status.add':
@@ -200,14 +209,7 @@
           }
         }
 
-        li = document.createElement('li');
-        time = document.createElement('time');
-        time.textContent = data.status.created;
-        p = document.createElement('p');
-        p.textContent = status.account.name + ': ' + status.status;
-        li.appendChild(time);
-        li.appendChild(p);
-        statuses.insertBefore(li, statuses.firstChild);
+        generateStatus(data.status, 'add');
         break;
       case 'status.remove':
         if (account.id == status.account.id) {

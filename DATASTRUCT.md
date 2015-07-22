@@ -23,6 +23,5 @@
 		id: <id>,
 		created: <timestamp>,
 		account: { user metadata },
-		replyTo: <id>,
 		faved: true | false
 	}
