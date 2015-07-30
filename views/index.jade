@@ -1,33 +1,40 @@
 extends layout
 
 block content
-  #message no message
-  .content
-    section.left
-      h2 account details
-      div Your identifier is
-        span#identifier= identifier
-      #profile
-        input(type='text', id='acct-name', placeholder='name')
-        input(type='text', id='acct-bio', placeholder='bio')
-        button(type='button', id='account-update') update
+  if authenticated
+    #message no message
+    .content
+      section.left
+        h2 account details
+        div Your identifier is
+          span#identifier= identifier
+        div Your public URL is
+          a#url(href='', target='blank')
+        #profile
+          input(type='text', id='acct-name', placeholder='name')
+          input(type='text', id='acct-bio', placeholder='bio')
+          button(type='button', id='account-update') update
 
-    section.right
-      h2 follow a new identifier
-      input(type='text', id='peer-id')
-      button(type='button', id='peer-connect') follow
+      section.right
+        h2 follow a new identifier
+        input(type='text', id='peer-id')
+        button(type='button', id='peer-connect') follow
 
-  section#status
-    textarea(type='text', id='status-message', placeholder='enter status update', required)
-    button(type='button', id='status-send') send to connected parties
+    section#status
+      textarea(type='text', id='status-message', placeholder='enter status update', required)
+      button(type='button', id='status-send') send to connected parties
 
-  section#feed.left
-    h2 feed
-    ul#statuses
+    section#feed.left
+      h2 feed
+      ul#statuses
 
-  section#follows.right
-    h2 following
-    ul#followed
+    section#follows.right
+      h2 following
+      ul#followed
 
-    h2 followers
-    ul#followers
+      h2 followers
+      ul#followers
+  else
+    form(method='post', action='/authenticate')
+      input(type='text', name='password')
+      button(type='submit') authenticate

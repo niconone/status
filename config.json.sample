@@ -1,6 +1,9 @@
 {
     "domain": "localhost",
     "port": 3000,
-    "peerKey": "",
-    "db": "./db"
+    "db": "./db",
+    "cookie": "secret",
+    "cookiePassword": "secret",
+    "cookieTTL": 1000000000,
+    "password": ""
 }

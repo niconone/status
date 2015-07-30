@@ -11,8 +11,22 @@ const views = require('./lib/views');
 const account = require('./lib/account');
 const connections = require('./lib/connections');
 const statuses = require('./lib/statuses');
+const utils = require('./lib/utils');
 
 const server = new Hapi.Server();
+
+let options = {
+  cookieOptions: {
+    password: conf.get('cookie'),
+    isSecure: false,
+    clearInvalid: true
+  }
+};
+
+let auth = {
+  mode: 'try',
+  strategy: 'session'
+};
 
 server.connection({
   host: conf.get('domain'),
@@ -28,6 +42,20 @@ server.views({
   compileOptions: {
     pretty: true
   }
+});
+
+server.register(require('hapi-auth-cookie'), function(err) {
+  if (err) {
+    throw err;
+  }
+
+  server.auth.strategy('session', 'cookie', {
+    password: conf.get('cookiePassword'),
+    ttl: conf.get('cookieTTL'),
+    cookie: conf.get('cookie'),
+    keepAlive: true,
+    isSecure: false
+  });
 });
 
 server.ext('onPreResponse', function(request, reply) {
@@ -75,7 +103,15 @@ let routes = [
   {
     method: 'GET',
     path: '/',
-    handler: views.dashboard
+    handler: views.dashboard,
+    config: {
+      auth: auth
+    }
+  },
+  {
+    method: 'POST',
+    path: '/authenticate',
+    handler: account.authenticate
   }
 ];
 
@@ -104,10 +140,6 @@ server.start(function(err) {
   io.on('connection', function(socket) {
     socket.on('identifier', function() {
       views.getID(socket);
-    });
-
-    socket.on('api', function() {
-      socket.emit('apiack', conf.get('peerKey'));
     });
 
     socket.on('follow', function(data) {
@@ -164,7 +196,7 @@ server.start(function(err) {
           account.get(socket);
           break;
         case 'account.update':
-          console.log('updating account changes')
+          console.log('updating account changes');
           account.update(socket, data);
           break;
       }

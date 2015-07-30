@@ -13,106 +13,97 @@
   var followingList = {};
   var followerList = {};
 
-  var apiKey;
-  var peer;
+  var remoteSocket;
 
-  function connect(conn) {
-    conn.on('data', function(data) {
-      var dataack = {
-        type: data.type
-      };
+  socket.on('dataack', function(data) {
+    var dataack = {
+      type: data.type
+    };
 
-      switch (data.type) {
-        case 'follow-add':
-          dataack.notification = '(following) added you ' + data.account.id;
-          followingList[data.account.id] = data.account;
+    switch (data.type) {
+      case 'follow-add':
+        dataack.notification = '(following) added you ' + data.account.id;
+        followingList[data.account.id] = data.account;
 
-          socket.emit('follow', {
-            type: 'follow.add',
-            account: data.account
-          });
-          break;
-        case 'follow-remove':
-          dataack.notification = '(following) removed you ' + data.account.id;
-          delete followingList[data.account.id];
+        socket.emit('follow', {
+          type: 'follow.add',
+          account: data.account
+        });
+        break;
+      case 'follow-remove':
+        dataack.notification = '(following) removed you ' + data.account.id;
+        delete followingList[data.account.id];
 
-          socket.emit('follow', {
-            type: 'follow.remove',
-            account: data.account
-          });
-          break;
-        case 'follower-add':
-          dataack.notification = '(follower) added you ' + data.account.id;
-          followerList[data.account.id] = data.account;
+        socket.emit('follow', {
+          type: 'follow.remove',
+          account: data.account
+        });
+        break;
+      case 'follower-add':
+        dataack.notification = '(follower) added you ' + data.account.id;
+        followerList[data.account.id] = data.account;
 
-          socket.emit('follower', {
-            type: 'follower.add',
-            account: data.account
-          });
-          break;
-        case 'follower-remove':
-          dataack.notification = '(follower) removed you ' + data.account.id;
-          delete followerList[data.account.id];
+        socket.emit('follower', {
+          type: 'follower.add',
+          account: data.account
+        });
+        break;
+      case 'follower-remove':
+        dataack.notification = '(follower) removed you ' + data.account.id;
+        delete followerList[data.account.id];
 
-          socket.emit('follower', {
-            type: 'follower.remove',
-            account: data.account
-          });
-          break;
-        case 'status-add':
-          dataack.notification = 'status add ' + data.status;
+        socket.emit('follower', {
+          type: 'follower.remove',
+          account: data.account
+        });
+        break;
+      case 'status-add':
+        dataack.notification = 'status add ' + data.status;
 
-          socket.emit('status', {
-            type: 'status.add',
-            status: data.status
-          });
-          break;
-        case 'status-remove':
-          dataack.notification = 'status remove ' + data.status;
-          break;
-        case 'follow-account':
-          dataack.notification = 'updated their account ' + data.account.id;
-          followingList[data.account.id] = data.account;
+        socket.emit('status', {
+          type: 'status.add',
+          status: data.status
+        });
+        break;
+      case 'status-remove':
+        dataack.notification = 'status remove ' + data.status;
+        break;
+      case 'follow-account':
+        dataack.notification = 'updated their account ' + data.account.id;
+        followingList[data.account.id] = data.account;
 
-          socket.emit('follow', {
-            type: 'follow.update',
-            account: data.account
-          });
-          break;
-        case 'follower-account':
-          dataack.notification = 'updated their account ' + data.account.id;
-          followerList[data.account.id] = data.account;
+        socket.emit('follow', {
+          type: 'follow.update',
+          account: data.account
+        });
+        break;
+      case 'follower-account':
+        dataack.notification = 'updated their account ' + data.account.id;
+        followerList[data.account.id] = data.account;
 
-          socket.emit('follower', {
-            type: 'follower.update',
-            account: data.account
-          });
-          break;
-      }
+        socket.emit('follower', {
+          type: 'follower.update',
+          account: data.account
+        });
+        break;
+    }
 
-      document.querySelector('#message').textContent = dataack.notification;
-      console.log('Received', data);
-    });
-  }
+    document.querySelector('#message').textContent = dataack.notification;
+    console.log('Received', data);
+  });
 
   // Follow someone else's account
   followBtn.onclick = function(ev) {
     ev.preventDefault();
 
     var followID = document.querySelector('#peer-id').value;
-    var conn = peer.connect(followID);
+
+    remoteSocket = io(followID);
     console.log('attempting to follow an account ', followID);
 
-    conn.on('open', function() {
-      console.log('notify followee of add ', followID);
-      conn.send({
-        type: 'follower-add',
-        account: account
-      });
-    });
-
-    conn.on('error', function(err) {
-      console.log('ERROR: ', err);
+    remoteSocket.emit('dataack', {
+      type: 'follower-add',
+      account: account
     });
 
     console.log('update local following list with followee ', followID);
@@ -124,6 +115,7 @@
     });
 
     document.querySelector('#peer-id').value = '';
+    remoteSocket = null;
   };
 
   // Update your public account details
@@ -159,19 +151,18 @@
   // Notifications from status updates
   socket.on('statusack', function(data) {
     var f;
-    var conn;
     var li;
     var time;
     var p;
 
     var status = data.status;
 
-    function generateStatus(status, type) {
+    function generateStatus(stat, type) {
       li = document.createElement('li');
       time = document.createElement('time');
-      time.textContent = moment(status.created).fromNow();
+      time.textContent = moment(stat.created).fromNow();
       p = document.createElement('p');
-      p.innerHTML = status.account.name + ': ' + status.status;
+      p.innerHTML = stat.account.name + ': ' + stat.status;
       li.appendChild(time);
       li.appendChild(p);
 
@@ -192,17 +183,11 @@
         if (account.id == status.account.id) {
           console.log(data.type, ': your status add is being sent to connected followers ', data);
           for (f in followerList) {
-            conn = peer.connect(f);
+            remoteSocket = io(f);
 
-            conn.on('open', function() {
-              conn.send({
+            remoteSocket.emit('dataack', {
                 type: 'status-add',
                 status: status
-              });
-            });
-
-            conn.on('error', function(err) {
-              console.log('ERROR: ', err);
             });
           }
         }
@@ -213,21 +198,14 @@
         if (account.id == status.account.id) {
           console.log(data.type, ': your status remove is being sent to connected followers ', data);
           for (f in followerList) {
-            conn = peer.connect(f);
+            remoteSocket = io(f);
 
-            conn.on('open', function() {
-              conn.send({
-                type: 'status-remove',
-                status: status.status
-              });
-            });
-
-            conn.on('error', function(err) {
-              console.log('ERROR: ', err);
+            remoteSocket.emit('dataack', {
+              type: 'status-remove',
+              status: status.status
             });
           }
         }
-
         // todo - remove message
         break;
     }
@@ -334,22 +312,16 @@
         account.bio = data.account.bio;
 
         for (var f in followerList) {
-          var conn = peer.connect(f);
+          remoteSocket = io(f);
 
-          conn.on('open', function() {
-            conn.send({
-              type: 'follower-account',
-              account: data.account
-            });
-
-            conn.send({
-              type: 'follow-account',
-              account: data.account
-            });
+          remoteSocket.emit('dataack', {
+            type: 'follower-account',
+            account: data.account
           });
 
-          conn.on('error', function(err) {
-            console.log('ERROR: ', err);
+          remoteSocket.emit('dataack', {
+            type: 'follow-account',
+            account: data.account
           });
         }
         break;
@@ -382,28 +354,9 @@
   // Returns your identifier id
   socket.on('identifierack', function(identifier) {
     console.log('received identifier ', identifier);
-    account.id = identifier;
-    document.querySelector('#identifier').textContent = identifier;
-    socket.emit('api');
-  });
-
-  // Returns api key from the server
-  // Let's wait until we get all that server data via websockets before we access it
-  socket.on('apiack', function(peerKey) {
-    console.log('received peerjs apiKey ', peerKey);
-    apiKey = peerKey;
-    console.log('connecting to peerjs server');
-    peer = new Peer(account.id, {key: apiKey, debug: 3});
-    peer.on('connection', connect);
-    peer.on('error', function(err) {
-      console.log('ERROR: ', err.type);
-
-      if (err.type == 'unavailable-id') {
-        setTimeout(function() {
-          console.log('Connecting failed, attempting to reconnect...');
-          socket.emit('api');
-        }, 2000);
-      }
-    });
+    account.id = identifier.id;
+    account.publicURL = identifier.publicURL;
+    document.querySelector('#identifier').textContent = account.id;
+    document.querySelector('#url').href = document.querySelector('#url').textContent = account.publicURL;
   });
 }).call(this);
