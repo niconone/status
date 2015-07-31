@@ -11,13 +11,14 @@ block content
         div Your public URL is
           a#url(href='', target='blank')
         #profile
-          input(type='text', id='acct-name', placeholder='name')
+          input(type='text', id='acct-name', placeholder='name', required)
           input(type='text', id='acct-bio', placeholder='bio')
           button(type='button', id='account-update') update
 
       section.right
         h2 follow a new identifier
-        input(type='text', id='peer-id')
+        input(type='text', id='peer-id', required)
+        input(type='text', id='peer-domain', required)
         button(type='button', id='peer-connect') follow
 
     section#status

@@ -35,10 +35,6 @@
           account: data.account
         });
         break;
-      case 'status.remove':
-        dataack.notification = 'status remove ' + data.status;
-        break;
-
     }
 
   });
@@ -48,6 +44,7 @@
     ev.preventDefault();
 
     var followID = document.querySelector('#peer-id').value;
+    var followURL = document.querySelector('#peer-domain').value;
 
     console.log('attempting to follow an account ', followID);
 
@@ -60,7 +57,8 @@
     socket.emit('follow', {
       type: 'follow.add',
       account: {
-        id: followID
+        id: followID,
+        publicURL: followURL
       }
     });
 
@@ -127,9 +125,6 @@
         break;
       case 'status.add':
         generateStatus(data.status, 'add');
-        break;
-      case 'status.remove':
-        // todo - remove message
         break;
     }
   });
