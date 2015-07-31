@@ -234,8 +234,8 @@
           followerList[f.value.id] = f.value;
           li = document.createElement('li');
           a = document.createElement('a');
-          a.href = acct.publicURL;
-          a.textContent = acct.id + ': ' + acct.name;
+          a.href = f.value.publicURL;
+          a.textContent = f.value.id + ': ' + f.value.name;
           li.appendChild(a);
           li.id = 'follower-id-' + f.value.id;
           followers.appendChild(li);
@@ -249,6 +249,7 @@
       case 'account.get':
         document.querySelector('#acct-name').value = data.account.name;
         document.querySelector('#acct-bio').value = data.account.bio;
+        document.querySelector('#url').href = document.querySelector('#url').textContent = data.account.publicURL;
         account.name = data.account.name;
         account.bio = data.account.bio;
         break;
@@ -256,6 +257,7 @@
         console.log('account details updated ', data.account);
         document.querySelector('#acct-name').value = data.account.name;
         document.querySelector('#acct-bio').value = data.account.bio;
+        document.querySelector('#url').href = document.querySelector('#url').textContent = data.account.publicURL;
         account.name = data.account.name;
         account.bio = data.account.bio;
         break;
@@ -292,11 +294,5 @@
     account.publicURL = identifier.publicURL;
     document.querySelector('#identifier').textContent = account.id;
     document.querySelector('#url').href = document.querySelector('#url').textContent = account.publicURL;
-
-    // Update account for followers/following - waiting for publicURL to appear before sending
-    socket.emit('account', {
-      type: 'account.update',
-      account: account
-    });
   });
 }).call(this);

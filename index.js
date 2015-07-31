@@ -100,6 +100,11 @@ let routes = [
     }
   },
   {
+    method: 'GET',
+    path: '/ext/profile',
+    handler: account.getIncoming
+  },
+  {
     method: 'POST',
     path: '/authenticate',
     handler: account.authenticate
@@ -194,9 +199,6 @@ server.start(function(err) {
           break;
         case 'status.add':
           statuses.add(socket, data);
-          break;
-        case 'status.remove':
-          // todo
           break;
       }
     });

@@ -5,10 +5,9 @@ body {
 }
 
 section {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAFUlEQVQYlWNgoAZ49OjRGcoUDAsrAMzQFK3d6aBdAAAAAElFTkSuQmCC);
+  background-color: #f1f1f1;
   margin: 3px 0;
   float: left;
-  box-shadow: #f1f1f1 1px 1px 0;
 }
 
 header, h2 {
@@ -86,7 +85,7 @@ textarea {
   float: left;
   width: 100%;
   position: relative;
-  height: 100px;
+  height: 120px;
   margin-bottom: 5px;
 }
 
