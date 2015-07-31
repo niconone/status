@@ -11,17 +11,8 @@ const views = require('./lib/views');
 const account = require('./lib/account');
 const connections = require('./lib/connections');
 const statuses = require('./lib/statuses');
-const utils = require('./lib/utils');
 
 const server = new Hapi.Server();
-
-let options = {
-  cookieOptions: {
-    password: conf.get('cookie'),
-    isSecure: false,
-    clearInvalid: true
-  }
-};
 
 let auth = {
   mode: 'try',
@@ -112,6 +103,26 @@ let routes = [
     method: 'POST',
     path: '/authenticate',
     handler: account.authenticate
+  },
+  {
+    method: 'POST',
+    path: '/ext/follower',
+    handler: connections.addIDFollowerIncoming
+  },
+  {
+    method: 'POST',
+    path: '/ext/following/profile',
+    handler: connections.updateAccountFollowing
+  },
+  {
+    method: 'POST',
+    path: '/ext/follower/profile',
+    handler: connections.updateAccountFollower
+  },
+  {
+    method: 'POST',
+    path: '/ext/status',
+    handler: statuses.addIncoming
   }
 ];
 
@@ -129,13 +140,19 @@ server.route({
   }
 });
 
+let io;
+
+exports.io = function() {
+  return io;
+};
+
 server.start(function(err) {
   if (err) {
     console.error(err.message);
     process.exit(1);
   }
 
-  let io = SocketIO.listen(server.listener);
+  io = SocketIO.listen(server.listener);
 
   io.on('connection', function(socket) {
     socket.on('identifier', function() {
@@ -144,9 +161,6 @@ server.start(function(err) {
 
     socket.on('follow', function(data) {
       switch (data.type) {
-        case 'follow.update':
-          connections.updateAccountFollowing(socket, data);
-          break;
         case 'follow.add':
           connections.addIDFollowing(socket, data);
           break;
@@ -161,9 +175,6 @@ server.start(function(err) {
 
     socket.on('follower', function(data) {
       switch (data.type) {
-        case 'follower.update':
-          connections.updateAccountFollower(socket, data);
-          break;
         case 'follower.add':
           connections.addIDFollower(socket, data);
           break;
