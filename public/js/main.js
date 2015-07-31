@@ -216,7 +216,7 @@
         a.href = acct.publicURL;
         a.textContent = acct.id + ': ' + acct.name;
         li.appendChild(a);
-        li.id = 'id-' + acct.id;
+        li.id = 'follower-id-' + acct.id;
         followers.appendChild(li);
         break;
       case 'follower.remove':

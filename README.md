@@ -10,7 +10,7 @@ Install [iojs](https://iojs.org) or [babel](https://babeljs.io)
 [sign up for an ngrok account](https://dashboard.ngrok.com/user/signup)
 
     ./ngrok authtoken <your ngrok authtoken>
-    npm install
+    npm install --no-bin-links
     npm start
     ./ngrok http 3000
 
