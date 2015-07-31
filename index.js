@@ -207,7 +207,7 @@ server.start(function(err) {
           account.get(socket);
           break;
         case 'account.update':
-          console.log('updating account changes');
+          console.log('updating account changes ', data);
           account.update(socket, data);
           break;
       }
