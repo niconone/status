@@ -80,7 +80,8 @@
       type: 'account.update',
       account: {
         name: document.querySelector('#acct-name').value || account.id,
-        bio: document.querySelector('#acct-bio').value || '?'
+        bio: document.querySelector('#acct-bio').value || '?',
+        publicURL: document.querySelector('#acct-url').value || 'http://'
       }
     });
   };
@@ -249,7 +250,7 @@
       case 'account.get':
         document.querySelector('#acct-name').value = data.account.name;
         document.querySelector('#acct-bio').value = data.account.bio;
-        document.querySelector('#url').href = document.querySelector('#url').textContent = data.account.publicURL;
+        document.querySelector('#acct-url').value = data.account.publicURL;
         account.name = data.account.name;
         account.bio = data.account.bio;
         break;
@@ -257,7 +258,7 @@
         console.log('account details updated ', data.account);
         document.querySelector('#acct-name').value = data.account.name;
         document.querySelector('#acct-bio').value = data.account.bio;
-        document.querySelector('#url').href = document.querySelector('#url').textContent = data.account.publicURL;
+        document.querySelector('#acct-url').value = data.account.publicURL;
         account.name = data.account.name;
         account.bio = data.account.bio;
         break;
@@ -290,9 +291,7 @@
   // Returns your identifier id
   socket.on('identifierack', function(identifier) {
     console.log('received identifier ', identifier);
-    account.id = identifier.id;
-    account.publicURL = identifier.publicURL;
+    account.id = identifier
     document.querySelector('#identifier').textContent = account.id;
-    document.querySelector('#url').href = document.querySelector('#url').textContent = account.publicURL;
   });
 }).call(this);

@@ -8,17 +8,21 @@ block content
         h2 account details
         div Your identifier is
           span#identifier= identifier
-        div Your public URL is
-          a#url(href='', target='blank')
         #profile
-          input(type='text', id='acct-name', placeholder='name', required)
-          input(type='text', id='acct-bio', placeholder='bio')
+          label(for='acct-name')* name
+            input(type='text', id='acct-name', placeholder='name', required)
+          label(for='acct-bio') bio
+            input(type='text', id='acct-bio', placeholder='bio')
+          label(for='acct-url')* public URL
+            input(type='text', id='acct-url', placeholder='http://', required)
           button(type='button', id='account-update') update
 
       section.right
         h2 follow a new identifier
-        input(type='text', id='peer-id', required)
-        input(type='text', id='peer-domain', required)
+        label(for='peer-id') peer ID
+          input(type='text', id='peer-id', placeholder='peer id', required)
+        label(for='peer-domain') peer URL
+          input(type='text', id='peer-domain', placeholder='http://', required)
         button(type='button', id='peer-connect') follow
 
     section#status

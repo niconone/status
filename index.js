@@ -100,14 +100,14 @@ let routes = [
     }
   },
   {
-    method: 'GET',
-    path: '/ext/profile',
-    handler: account.getIncoming
-  },
-  {
     method: 'POST',
     path: '/authenticate',
     handler: account.authenticate
+  },
+  {
+    method: 'GET',
+    path: '/ext/profile',
+    handler: account.getIncoming
   },
   {
     method: 'POST',
