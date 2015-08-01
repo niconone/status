@@ -48,10 +48,10 @@ button {
   border: 0;
 }
 
-input[type=text] {
+input[type=text], textarea {
   padding: 2px;
   font-family: Muli, Arial, sans-serif;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   margin: 5px 2px;
 }
 
@@ -77,21 +77,22 @@ form, ul {
 }
 
 textarea, input {
-  border: 1px solid #ddd;
+  border: 1px solid transparent;
   background-color: transparent;
 }
 
-textarea:hover, input:hover, textarea:focus, input:focus {
-  background-color: #fff;
-  color: #1d88c0;
+textarea:hover, input:hover, textarea:active, input:active {
+  background-color: #303638;
+  color: #fff;
+  font-weight: 200;
 }
 
-input:required, textarea:required {
-  box-shadow: 0;
+:required {
+  box-shadow: none;
 }
 
-input:invalid, textarea:invalid {
-  box-shadow: 0;
+:invalid, :-moz-ui-invalid, :-moz-submit-invalid {
+  box-shadow: none;
   border: 1px dashed #f00;
 }
 
@@ -102,8 +103,6 @@ textarea {
   min-height: 50px;
   max-height: 300px;
   resize: vertical;
-  font-family: Muli, Arial, sans-serif;
-  padding: 5px;
 }
 
 #feed, #statuses {
@@ -125,7 +124,6 @@ label[for=acct-url] {
 }
 
 #acct-url {
-  font-size: 0.9rem;
   width: 70%;
 }
 

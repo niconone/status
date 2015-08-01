@@ -170,7 +170,7 @@
         li = document.createElement('li');
         a = document.createElement('a');
         a.href = acct.publicURL;
-        a.textContent = acct.id + ': ' + acct.name;
+        a.textContent = acct.name;
         li.appendChild(a);
         li.id = 'follow-id-' + acct.id;
         followed.appendChild(li);
@@ -191,7 +191,7 @@
           li = document.createElement('li');
           a = document.createElement('a');
           a.href = f.value.publicURL;
-          a.textContent = f.value.id + ': ' + f.value.name;
+          a.textContent = f.value.name;
           li.appendChild(a);
           li.id = 'follow-id-' + f.value.id;
           followed.appendChild(li);
@@ -215,7 +215,7 @@
         li = document.querySelector('#follower-id-' + acct.id);
         a = li.querySelector('a');
         a.href = acct.publicURL;
-        a.textContent = acct.id + ': ' + acct.name;
+        a.textContent = acct.name;
         break;
       case 'follower.add':
         console.log(data.type, ': follower added you and is sending a notification ', acct);
@@ -227,7 +227,7 @@
         li = document.createElement('li');
         a = document.createElement('a');
         a.href = acct.publicURL;
-        a.textContent = acct.id + ': ' + acct.name;
+        a.textContent = acct.name;
         li.appendChild(a);
         li.id = 'follower-id-' + acct.id;
         followers.appendChild(li);
@@ -248,7 +248,7 @@
           li = document.createElement('li');
           a = document.createElement('a');
           a.href = f.value.publicURL;
-          a.textContent = f.value.id + ': ' + f.value.name;
+          a.textContent = f.value.name;
           li.appendChild(a);
           li.id = 'follower-id-' + f.value.id;
           followers.appendChild(li);
