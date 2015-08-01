@@ -1,5 +1,7 @@
 # status
 
+p2p status updates. decentralized.
+
 ## setup
 
 Install [iojs](https://iojs.org) or [babel](https://babeljs.io)
