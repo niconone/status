@@ -132,12 +132,15 @@
       button.textContent = 'x';
       button.id = 'status-' + stat.created + '-' + stat.id;
       button.onclick = function(ev) {
-        console.log('deleting');
         ev.preventDefault();
-        socket.emit('status', {
-          type: 'status.remove',
-          key: this.id
-        });
+
+        if (confirm('Confirm status deletion?')) {
+          console.log('deleting');
+          socket.emit('status', {
+            type: 'status.remove',
+            key: this.id
+          });
+        }
       };
 
       div.appendChild(button);

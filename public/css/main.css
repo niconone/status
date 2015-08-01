@@ -172,6 +172,7 @@ label[for=identifier] {
   margin-bottom: 5px;
   border-top: 1px solid #111;
   border-right: 1px solid #111;
+  padding-bottom: 20px;
 }
 
 .actions {
@@ -181,7 +182,7 @@ label[for=identifier] {
 }
 
 .actions button {
-  opacity: 0.3;
+  opacity: 0.1;
 }
 
 .actions button:hover, .actions button:active {
