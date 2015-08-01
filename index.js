@@ -59,35 +59,13 @@ server.ext('onPreResponse', function(request, reply) {
   let error = response;
   let ctx = {};
 
-  let message = error.output.payload.message;
   let statusCode = error.output.statusCode || 500;
-  ctx.code = statusCode;
+  ctx.code = error.output.statusCode || 500;
   ctx.httpMessage = http.STATUS_CODES[statusCode].toLowerCase();
-
-  switch (statusCode) {
-    case 404:
-      ctx.reason = 'page not found';
-      break;
-    case 403:
-      ctx.reason = 'forbidden';
-      break;
-    case 500:
-      ctx.reason = 'something went wrong';
-      break;
-    default:
-      break;
-  }
 
   console.log(error.stack || error);
 
-  if (ctx.reason) {
-    // Use actual message if supplied
-    ctx.reason = message || ctx.reason;
-    return reply.view('error', ctx).code(statusCode);
-  }
-
-  ctx.reason = message.replace(/\s/gi, '+');
-  reply.redirect(request.path + '?err=' + ctx.reason);
+  return reply.view('error', ctx).code(statusCode);
 });
 
 let routes = [

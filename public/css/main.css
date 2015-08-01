@@ -79,12 +79,12 @@ form, ul {
 textarea, input {
   border: 1px solid transparent;
   background-color: transparent;
+  font-weight: 200;
 }
 
 textarea:hover, input:hover, textarea:active, input:active {
   background-color: #303638;
   color: #fff;
-  font-weight: 200;
 }
 
 :required {
