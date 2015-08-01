@@ -200,6 +200,9 @@ server.start(function(err) {
         case 'status.add':
           statuses.add(socket, data);
           break;
+        case 'status.remove':
+          statuses.remove(socket, data);
+          break;
       }
     });
 

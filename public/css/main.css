@@ -65,7 +65,7 @@ form, ul {
   font-size: 0.9rem;
   transition-duration: 1s;
   text-align: left;
-  padding: 5px;
+  padding: 5px 30px 5px 5px;
   right: -500px;
   background-color: #dfff5e;
   z-index: 2;
@@ -73,7 +73,7 @@ form, ul {
 
 #notification.on {
   right: 0;
-  transition-duration: 2s;
+  transition-duration: 1s;
 }
 
 textarea, input {
@@ -166,11 +166,26 @@ label[for=identifier] {
 #feed li {
   width: 100%;
   background-color: #fff;
+  position: relative;
   float: left;
   clear: both;
   margin-bottom: 5px;
   border-top: 1px solid #111;
   border-right: 1px solid #111;
+}
+
+.actions {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.actions button {
+  opacity: 0.3;
+}
+
+.actions button:hover, .actions button:active {
+  opacity: 1;
 }
 
 #feed li time {

@@ -115,6 +115,7 @@
     var li;
     var time;
     var div;
+    var button;
 
     function generateStatus(stat, type) {
       li = document.createElement('li');
@@ -123,6 +124,23 @@
       div = document.createElement('div');
       div.innerHTML = stat.account.name + ': ' + stat.status;
       li.appendChild(time);
+      li.appendChild(div);
+      li.id = 'item-status-' + stat.created + '-' + stat.id;
+      div = document.createElement('div');
+      div.classList.add('actions');
+      button = document.createElement('button');
+      button.textContent = 'x';
+      button.id = 'status-' + stat.created + '-' + stat.id;
+      button.onclick = function(ev) {
+        console.log('deleting');
+        ev.preventDefault();
+        socket.emit('status', {
+          type: 'status.remove',
+          key: this.id
+        });
+      };
+
+      div.appendChild(button);
       li.appendChild(div);
 
       if (type === 'add') {
@@ -140,6 +158,10 @@
         break;
       case 'status.add':
         generateStatus(data.status, 'add');
+        break;
+      case 'status.remove':
+        console.log(data.status, statuses.querySelector('#item-' + data.status))
+        statuses.removeChild(statuses.querySelector('#item-' + data.status));
         break;
     }
   });
