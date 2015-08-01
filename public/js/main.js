@@ -69,7 +69,8 @@
       }
     });
 
-    document.querySelector('#peer-id').value = '';
+    followID.value = '';
+    followURL.value = '';
   };
 
   // Update your public account details
