@@ -9,7 +9,7 @@
   var accountBtn = document.querySelector('#account-update');
   var statusBtn = document.querySelector('#status-send');
   var statuses = document.querySelector('#statuses');
-  var notification = document.querySelector('#message');
+  var notification = document.querySelector('#notification');
   var account = {};
   var followingList = {};
   var followerList = {};
@@ -103,6 +103,13 @@
     document.querySelector('#status-message').value = '';
   };
 
+  function showNotification() {
+    notification.classList.add('on');
+    setTimeout(function() {
+      notification.classList.remove('on');
+    }, 5000);
+  }
+
   // Notifications from status updates
   socket.on('statusack', function(data) {
     var li;
@@ -149,6 +156,7 @@
       case 'follow.update':
         console.log(data.type, ': updating acct and sending followers a notification ', acct);
         notification.textContent = acct.name + ' updated their profile';
+        showNotification();
         li = document.querySelector('#follow-id-' + acct.id);
         a = li.querySelector('a');
         a.href = acct.publicURL;
@@ -203,6 +211,7 @@
       case 'follower.update':
         console.log(data.type, ': follower updating account and sending a notification ', acct);
         notification.textContent = acct.name + ' updated their profile';
+        showNotification();
         li = document.querySelector('#follower-id-' + acct.id);
         a = li.querySelector('a');
         a.href = acct.publicURL;
@@ -211,6 +220,7 @@
       case 'follower.add':
         console.log(data.type, ': follower added you and is sending a notification ', acct);
         notification.textContent = acct.name + ' is following your statuses';
+        showNotification();
         if (document.querySelector('#follower-id-' + acct.id)) {
           break;
         }
@@ -259,6 +269,7 @@
       case 'account.update':
         console.log('account details updated ', data.account);
         notification.textContent = 'your profile is updated';
+        showNotification();
         document.querySelector('#acct-name').value = data.account.name;
         document.querySelector('#acct-bio').value = data.account.bio;
         document.querySelector('#acct-url').value = data.account.publicURL;

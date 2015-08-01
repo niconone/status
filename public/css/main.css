@@ -59,10 +59,21 @@ form, ul {
   padding: 0 10px;
 }
 
-#message {
+#notification {
+  position: fixed;
+  top: 0;
+  font-size: 0.9rem;
+  transition-duration: 1s;
+  text-align: left;
   padding: 5px;
+  right: -500px;
   background-color: #dfff5e;
-  float: right;
+  z-index: 2;
+}
+
+#notification.on {
+  right: 0;
+  transition-duration: 2s;
 }
 
 textarea, input {
