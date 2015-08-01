@@ -122,6 +122,12 @@ textarea {
   display: inline-block;
 }
 
+#feed li img {
+  width: 100%;
+  max-width: 500px;
+  max-height: 500px;
+}
+
 #feed li p {
   padding: 0 19px;
 }

@@ -106,16 +106,16 @@
   socket.on('statusack', function(data) {
     var li;
     var time;
-    var p;
+    var div;
 
     function generateStatus(stat, type) {
       li = document.createElement('li');
       time = document.createElement('time');
       time.textContent = moment(parseInt(stat.created, 10)).fromNow();
-      p = document.createElement('p');
-      p.innerHTML = stat.account.name + ': ' + stat.status;
+      div = document.createElement('div');
+      div.innerHTML = stat.account.name + ': ' + stat.status;
       li.appendChild(time);
-      li.appendChild(p);
+      li.appendChild(div);
 
       if (type === 'add') {
         statuses.insertBefore(li, statuses.firstChild);
