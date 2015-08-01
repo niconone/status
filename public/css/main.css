@@ -5,18 +5,29 @@ body {
 }
 
 section {
-  background-color: #f1f1f1;
   margin: 3px 0;
   float: left;
+  padding: 5px 10px;
+  border-top: 1px solid #111;
+  border-right: 1px solid #111;
 }
 
-header, h2 {
-  background-color: #fff;
+header {
+  width: 100%;
+}
+
+header span {
+  margin-left: 10px;
+  font-size: 1.6rem;
+}
+
+header, h2, label {
   display: inline-block;
   color: #111;
   font-weight: 100;
   font-size: 1rem;
-  padding: 2px 10px;
+  padding: 0;
+  text-transform: uppercase;
 }
 
 h2 {
@@ -28,17 +39,13 @@ a {
   color: #26d3e7;
 }
 
-textarea, input, button {
-  border: 1px solid #26d3e7;
-}
-
 button {
-  background-color: #26d3e7;
-  font-size: 1.1rem;
-}
-
-#identifier {
-  padding: 10px 0;
+  background-color: #111;
+  color: #ccc;
+  font-size: 1.12rem;
+  text-transform: uppercase;
+  font-weight: 100;
+  border: 0;
 }
 
 input[type=text] {
@@ -50,6 +57,31 @@ input[type=text] {
 
 form, ul {
   padding: 0 10px;
+}
+
+#message {
+  padding: 5px;
+  background-color: #dfff5e;
+  float: right;
+}
+
+textarea, input {
+  border: 1px solid #ddd;
+  background-color: transparent;
+}
+
+textarea:hover, input:hover, textarea:focus, input:focus {
+  background-color: #fff;
+  color: #1d88c0;
+}
+
+input:required, textarea:required {
+  box-shadow: 0;
+}
+
+input:invalid, textarea:invalid {
+  box-shadow: 0;
+  border: 1px dashed #f00;
 }
 
 textarea {
@@ -68,25 +100,37 @@ textarea {
 }
 
 #wrapper {
-  min-width: 800px;
+  min-width: 700px;
 }
 
 #identifier {
-  padding-left: 5px;
   display: inline-block;
+  margin-left: 10px;
+  font-size: 1.3rem;
+}
+
+label[for=acct-url] {
+  width: 70%;
+}
+
+#acct-url {
+  font-size: 0.9rem;
+  width: 70%;
+}
+
+label[for=identifier] {
+  width: 100%;
 }
 
 #status-message {
-  width: 64%;
-  font-size: 1.2rem;
+  width: 84%;
+  font-size: 1.1rem;
 }
 
 .content {
-  float: left;
   width: 100%;
   position: relative;
-  height: 120px;
-  margin-bottom: 5px;
+  height: 140px;
 }
 
 .left, .right {
@@ -96,16 +140,18 @@ textarea {
 
 .left {
   float: left;
-  width: 65%;
+  width: 60%;
 }
 
 .right {
   float: right;
   width: 33%;
+  margin-right: 5px;
 }
 
 #status {
-  width: 100%;
+  margin: 10px 0;
+  width: 80%;
 }
 
 #feed li {
@@ -114,6 +160,8 @@ textarea {
   float: left;
   clear: both;
   margin-bottom: 5px;
+  border-top: 1px solid #111;
+  border-right: 1px solid #111;
 }
 
 #feed li time {

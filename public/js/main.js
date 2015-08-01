@@ -9,6 +9,7 @@
   var accountBtn = document.querySelector('#account-update');
   var statusBtn = document.querySelector('#status-send');
   var statuses = document.querySelector('#statuses');
+  var notification = document.querySelector('#message');
   var account = {};
   var followingList = {};
   var followerList = {};
@@ -142,12 +143,12 @@
     var a;
     var acct = data.account;
 
-    document.querySelector('#message').textContent = data.type;
     console.log('Received', data);
 
     switch (data.type) {
       case 'follow.update':
         console.log(data.type, ': updating acct and sending followers a notification ', acct);
+        notification.textContent = acct.name + ' updated their profile';
         li = document.querySelector('#follow-id-' + acct.id);
         a = li.querySelector('a');
         a.href = acct.publicURL;
@@ -196,12 +197,12 @@
     var a;
     var acct = data.account;
 
-    document.querySelector('#message').textContent = data.type;
     console.log('Received', data);
 
     switch (data.type) {
       case 'follower.update':
         console.log(data.type, ': follower updating account and sending a notification ', acct);
+        notification.textContent = acct.name + ' updated their profile';
         li = document.querySelector('#follower-id-' + acct.id);
         a = li.querySelector('a');
         a.href = acct.publicURL;
@@ -209,6 +210,7 @@
         break;
       case 'follower.add':
         console.log(data.type, ': follower added you and is sending a notification ', acct);
+        notification.textContent = acct.name + ' is following your statuses';
         if (document.querySelector('#follower-id-' + acct.id)) {
           break;
         }
@@ -256,6 +258,7 @@
         break;
       case 'account.update':
         console.log('account details updated ', data.account);
+        notification.textContent = 'your profile is updated';
         document.querySelector('#acct-name').value = data.account.name;
         document.querySelector('#acct-bio').value = data.account.bio;
         document.querySelector('#acct-url').value = data.account.publicURL;

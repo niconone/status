@@ -2,13 +2,12 @@ extends layout
 
 block content
   if authenticated
-    #message no message
     .content
       section.left
         h2 account details
-        div Your identifier is
-          span#identifier= identifier
         #profile
+          label(for='identifier') your identifier
+            span#identifier= identifier
           label(for='acct-name') * name
             input(type='text', id='acct-name', placeholder='name', required)
           label(for='acct-bio') bio
@@ -27,7 +26,7 @@ block content
 
     section#status
       textarea(type='text', id='status-message', placeholder='enter status update', required)
-      button(type='button', id='status-send') send to connected parties
+      button(type='button', id='status-send') send
 
     section#feed.left
       h2 feed
