@@ -78,7 +78,7 @@ form, ul {
 }
 
 textarea, input {
-  border: 1px solid transparent;
+  border: 1px solid #f1f1f1;
   background-color: transparent;
   font-weight: 200;
 }
