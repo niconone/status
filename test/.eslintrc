@@ -73,7 +73,7 @@
     // Maximum length of a line.
     "max-len": [1, 120],
     // Maximum depth callbacks can be nested.
-    "max-nested-callbacks": [2, 4],
+    "max-nested-callbacks": [2, 5],
     // Don't limit the number of parameters that can be used in a function.
     "max-params": 0,
     // Don't limit the maximum number of statement allowed in a function. We

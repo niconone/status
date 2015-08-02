@@ -3,6 +3,7 @@
 const should = require('should');
 const conf = require('nconf');
 const io = require('socket.io-client');
+const request = require('request');
 
 const server = require('../').getServer();
 
@@ -132,6 +133,53 @@ describe('account.update', function() {
         d.account.publicURL.should.equal(account.publicURL);
         socket.disconnect();
         done();
+      });
+    });
+  });
+
+  it('should send a profile to a publicURL', function(done) {
+    let account = {
+      name: 'test1',
+      bio: '?',
+      publicURL: 'http://test.ngrok.com'
+    };
+
+    let account2 = {
+      id: 111,
+      name: 'test2',
+      bio: '?',
+      publicURL: 'http://test2.ngrok.com'
+    };
+
+    let socket = io.connect(HOST, wsOpts);
+
+    socket.on('connect', function() {
+      socket.emit('follower', {
+        type: 'follower.add',
+        account: account2
+      });
+
+      socket.on('followerack', function(data) {
+        request({
+          url: HOST + '/ext/profile',
+          qs: {
+            publicURL: account2.publicURL
+          },
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }, function(error, res, body) {
+          if (error) {
+            console.log('ERROR: ', error);
+          }
+
+          should.deepEqual(JSON.parse(body), {
+            status: 'sent'
+          });
+
+          done();
+        });
       });
     });
   });
