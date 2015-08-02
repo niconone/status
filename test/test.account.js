@@ -7,11 +7,9 @@ const request = require('request');
 
 const server = require('../').getServer();
 
-process.env.NODE_ENV = 'test';
+conf.argv().env().file({ file: 'test/config.json' });
 
 const HOST = 'http://127.0.0.1:' + conf.get('port');
-
-conf.argv().env().file({ file: 'test/config.json' });
 
 let wsOpts = {
   transports: ['websocket'],
@@ -109,7 +107,9 @@ describe('account.update', function() {
       });
     });
   });
+});
 
+describe('account.get', function() {
   it('should get a profile', function(done) {
     let account = {
       name: 'test1',
@@ -138,12 +138,6 @@ describe('account.update', function() {
   });
 
   it('should send a profile to a publicURL', function(done) {
-    let account = {
-      name: 'test1',
-      bio: '?',
-      publicURL: 'http://test.ngrok.com'
-    };
-
     let account2 = {
       id: 111,
       name: 'test2',
@@ -178,6 +172,7 @@ describe('account.update', function() {
             status: 'sent'
           });
 
+          socket.disconnect();
           done();
         });
       });
