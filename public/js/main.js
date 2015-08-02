@@ -155,18 +155,18 @@
     }
 
     switch (data.type) {
-      case 'status.getAll':
-        data.statuses.forEach(function(s) {
-          generateStatus(s.value);
-        });
-        break;
-      case 'status.add':
-        generateStatus(data.status, 'add');
-        break;
-      case 'status.remove':
-        console.log(data.status, statuses.querySelector('#item-' + data.status))
-        statuses.removeChild(statuses.querySelector('#item-' + data.status));
-        break;
+    case 'status.getAll':
+      data.statuses.forEach(function(s) {
+        generateStatus(s.value);
+      });
+      break;
+    case 'status.add':
+      generateStatus(data.status, 'add');
+      break;
+    case 'status.remove':
+      console.log(data.status, statuses.querySelector('#item-' + data.status));
+      statuses.removeChild(statuses.querySelector('#item-' + data.status));
+      break;
     }
   });
 
@@ -179,49 +179,50 @@
     console.log('Received', data);
 
     switch (data.type) {
-      case 'follow.update':
-        console.log(data.type, ': updating acct and sending followers a notification ', acct);
-        notification.textContent = acct.name + ' updated their profile';
-        showNotification();
-        li = document.querySelector('#follow-id-' + acct.id);
-        a = li.querySelector('a');
-        a.href = acct.publicURL;
-        a.textContent = acct.id + ': ' + acct.name;
+    case 'follow.update':
+      console.log(data.type, ': updating acct and sending followers a notification ', acct);
+      notification.textContent = acct.name + ' updated their profile';
+      showNotification();
+      li = document.querySelector('#follow-id-' + acct.id);
+      a = li.querySelector('a');
+      a.href = acct.publicURL;
+      a.textContent = acct.id + ': ' + acct.name;
+      break;
+    case 'follow.add':
+      console.log(data.type, ': following acct and sending them a notification ', acct);
+      if (document.querySelector('#follow-id-' + acct.id)) {
         break;
-      case 'follow.add':
-        console.log(data.type, ': following acct and sending them a notification ', acct);
-        if (document.querySelector('#follow-id-' + acct.id)) {
-          break;
-        }
+      }
+      li = document.createElement('li');
+      a = document.createElement('a');
+      a.href = acct.publicURL;
+      a.textContent = acct.name;
+      li.appendChild(a);
+      li.id = 'follow-id-' + acct.id;
+      followed.appendChild(li);
+      break;
+    case 'follow.remove':
+      console.log(data.type, ': unfollowing acct and sending them a notification', acct);
+      followed.removeChild('follow-id-' + acct.id);
+      break;
+    case 'follow.getAll':
+      console.log(data.type, ': getting all following ', data.following);
+
+      while (followers.hasChildNodes()) {
+        followed.removeChild(followed.firstChild);
+      }
+
+      data.following.forEach(function(f) {
+        followingList[f.value.id] = f.value;
         li = document.createElement('li');
         a = document.createElement('a');
-        a.href = acct.publicURL;
-        a.textContent = acct.name;
+        a.href = f.value.publicURL;
+        a.textContent = f.value.name;
         li.appendChild(a);
-        li.id = 'follow-id-' + acct.id;
+        li.id = 'follow-id-' + f.value.id;
         followed.appendChild(li);
-        break;
-      case 'follow.remove':
-        console.log(data.type, ': unfollowing acct and sending them a notification', acct);
-        followed.removeChild('follow-id-' + acct.id);
-        break;
-      case 'follow.getAll':
-        console.log(data.type, ': getting all following ', data.following);
-
-        while (followers.hasChildNodes()) {
-          followed.removeChild(followed.firstChild);
-        }
-
-        data.following.forEach(function(f) {
-          followingList[f.value.id] = f.value;
-          li = document.createElement('li');
-          a = document.createElement('a');
-          a.href = f.value.publicURL;
-          a.textContent = f.value.name;
-          li.appendChild(a);
-          li.id = 'follow-id-' + f.value.id;
-          followed.appendChild(li);
-        });
+      });
+      break;
     }
   });
 
@@ -234,74 +235,75 @@
     console.log('Received', data);
 
     switch (data.type) {
-      case 'follower.update':
-        console.log(data.type, ': follower updating account and sending a notification ', acct);
-        notification.textContent = acct.name + ' updated their profile';
-        showNotification();
-        li = document.querySelector('#follower-id-' + acct.id);
-        a = li.querySelector('a');
-        a.href = acct.publicURL;
-        a.textContent = acct.name;
+    case 'follower.update':
+      console.log(data.type, ': follower updating account and sending a notification ', acct);
+      notification.textContent = acct.name + ' updated their profile';
+      showNotification();
+      li = document.querySelector('#follower-id-' + acct.id);
+      a = li.querySelector('a');
+      a.href = acct.publicURL;
+      a.textContent = acct.name;
+      break;
+    case 'follower.add':
+      console.log(data.type, ': follower added you and is sending a notification ', acct);
+      notification.textContent = acct.name + ' is following your statuses';
+      showNotification();
+      if (document.querySelector('#follower-id-' + acct.id)) {
         break;
-      case 'follower.add':
-        console.log(data.type, ': follower added you and is sending a notification ', acct);
-        notification.textContent = acct.name + ' is following your statuses';
-        showNotification();
-        if (document.querySelector('#follower-id-' + acct.id)) {
-          break;
-        }
+      }
+      li = document.createElement('li');
+      a = document.createElement('a');
+      a.href = acct.publicURL;
+      a.textContent = acct.name;
+      li.appendChild(a);
+      li.id = 'follower-id-' + acct.id;
+      followers.appendChild(li);
+      break;
+    case 'follower.remove':
+      console.log(data.type, ': follower removed you and is sending a notification ', acct);
+      followers.removeChild('follower-id-' + acct.id);
+      break;
+    case 'follower.getAll':
+      console.log(data.type, ': getting all followers ', data.followers);
+
+      while (followers.hasChildNodes()) {
+        followers.removeChild(followers.firstChild);
+      }
+
+      data.followers.forEach(function(f) {
+        followerList[f.value.id] = f.value;
         li = document.createElement('li');
         a = document.createElement('a');
-        a.href = acct.publicURL;
-        a.textContent = acct.name;
+        a.href = f.value.publicURL;
+        a.textContent = f.value.name;
         li.appendChild(a);
-        li.id = 'follower-id-' + acct.id;
+        li.id = 'follower-id-' + f.value.id;
         followers.appendChild(li);
-        break;
-      case 'follower.remove':
-        console.log(data.type, ': follower removed you and is sending a notification ', acct);
-        followers.removeChild('follower-id-' + acct.id);
-        break;
-      case 'follower.getAll':
-        console.log(data.type, ': getting all followers ', data.followers);
-
-        while (followers.hasChildNodes()) {
-          followers.removeChild(followers.firstChild);
-        }
-
-        data.followers.forEach(function(f) {
-          followerList[f.value.id] = f.value;
-          li = document.createElement('li');
-          a = document.createElement('a');
-          a.href = f.value.publicURL;
-          a.textContent = f.value.name;
-          li.appendChild(a);
-          li.id = 'follower-id-' + f.value.id;
-          followers.appendChild(li);
-        });
+      });
+      break;
     }
   });
 
   // Update the server with your new account changes
   socket.on('accountack', function(data) {
     switch (data.type) {
-      case 'account.get':
-        document.querySelector('#acct-name').value = data.account.name;
-        document.querySelector('#acct-bio').value = data.account.bio;
-        document.querySelector('#acct-url').value = data.account.publicURL;
-        account.name = data.account.name;
-        account.bio = data.account.bio;
-        break;
-      case 'account.update':
-        console.log('account details updated ', data.account);
-        notification.textContent = 'your profile is updated';
-        showNotification();
-        document.querySelector('#acct-name').value = data.account.name;
-        document.querySelector('#acct-bio').value = data.account.bio;
-        document.querySelector('#acct-url').value = data.account.publicURL;
-        account.name = data.account.name;
-        account.bio = data.account.bio;
-        break;
+    case 'account.get':
+      document.querySelector('#acct-name').value = data.account.name;
+      document.querySelector('#acct-bio').value = data.account.bio;
+      document.querySelector('#acct-url').value = data.account.publicURL;
+      account.name = data.account.name;
+      account.bio = data.account.bio;
+      break;
+    case 'account.update':
+      console.log('account details updated ', data.account);
+      notification.textContent = 'your profile is updated';
+      showNotification();
+      document.querySelector('#acct-name').value = data.account.name;
+      document.querySelector('#acct-bio').value = data.account.bio;
+      document.querySelector('#acct-url').value = data.account.publicURL;
+      account.name = data.account.name;
+      account.bio = data.account.bio;
+      break;
     }
   });
 
@@ -331,7 +333,7 @@
   // Returns your identifier id
   socket.on('identifierack', function(identifier) {
     console.log('received identifier ', identifier);
-    account.id = identifier
+    account.id = identifier;
     document.querySelector('#identifier').textContent = account.id;
   });
 }).call(this);
