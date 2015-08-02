@@ -159,7 +159,7 @@ describe('account.update', function() {
         account: account2
       });
 
-      socket.on('followerack', function(data) {
+      socket.on('followerack', function() {
         request({
           url: HOST + '/ext/profile',
           qs: {

@@ -2,7 +2,9 @@
   "globals": {
     "should": true,
     "it": true,
-    "describe": true
+    "describe": true,
+    "beforeEach": true,
+    "afterEach": true
   },
   "env": {
     "es6": true,
