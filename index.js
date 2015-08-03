@@ -106,6 +106,11 @@ let routes = [
     method: 'POST',
     path: '/ext/status',
     handler: statuses.addIncoming
+  },
+  {
+    method: 'POST',
+    path: '/ext/unfollow',
+    handler: connections.removeFollowerIncoming
   }
 ];
 
@@ -147,11 +152,11 @@ server.start(function(err) {
       case 'follow.add':
         connections.addIDFollowing(socket, data);
         break;
-      case 'follow.remove':
-        connections.removeIDFollowing(socket, data.account.id);
-        break;
       case 'follow.getAll':
         connections.getAllFollowing(socket);
+        break;
+      case 'follow.remove':
+        connections.removeIDFollowing(socket. data.account.id);
         break;
       }
     });
@@ -160,9 +165,6 @@ server.start(function(err) {
       switch (data.type) {
       case 'follower.add':
         connections.addIDFollower(socket, data);
-        break;
-      case 'follower.remove':
-        connections.removeIDFollower(socket, data.account.id);
         break;
       case 'follower.getAll':
         connections.getAllFollowers(socket);

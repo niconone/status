@@ -203,7 +203,7 @@
       break;
     case 'follow.remove':
       console.log(data.type, ': unfollowing acct and sending them a notification', acct);
-      followed.removeChild('follow-id-' + acct.id);
+      followed.removeChild(followed.querySelector('#follow-id-' + acct.id));
       break;
     case 'follow.getAll':
       console.log(data.type, ': getting all following ', data.following);
@@ -261,7 +261,7 @@
       break;
     case 'follower.remove':
       console.log(data.type, ': follower removed you and is sending a notification ', acct);
-      followers.removeChild('follower-id-' + acct.id);
+      followers.removeChild(document.querySelector('#follower-id-' + acct.id));
       break;
     case 'follower.getAll':
       console.log(data.type, ': getting all followers ', data.followers);
