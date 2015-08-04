@@ -18,6 +18,10 @@ let wsOpts = {
   'reopen delay': 0
 };
 
+after(function() {
+  server.stop();
+});
+
 describe('connections', function() {
   it('should follow an account', function(done) {
     let account2 = {

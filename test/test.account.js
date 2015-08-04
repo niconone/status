@@ -18,6 +18,10 @@ let wsOpts = {
   'reopen delay': 0
 };
 
+after(function() {
+  server.stop();
+});
+
 describe('account.authenticate', function() {
   it('should authenticate successfully', function(done) {
     let options = {
@@ -29,6 +33,8 @@ describe('account.authenticate', function() {
     };
 
     server.inject(options, function(res) {
+      let header = res.headers['set-cookie'];
+      header.length.should.equal(1);
       res.headers.location.should.equal('/?success');
       res.statusCode.should.equal(302);
       done();
@@ -45,6 +51,8 @@ describe('account.authenticate', function() {
     };
 
     server.inject(options, function(res) {
+      let header = res.headers['set-cookie'];
+      should.not.exist(header);
       res.headers.location.should.equal('/?error');
       res.statusCode.should.equal(302);
       done();

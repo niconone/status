@@ -39,7 +39,16 @@ block content
 
       h2 followers
       ul#followers
+
+    #feed-profile-view
+      iframe
+      .actions
+        button(type='button', id='close') x
   else
     form(method='post', action='/authenticate')
       input(type='text', name='password')
       button(type='submit') authenticate
+
+block script
+  if authenticated
+    script(type='text/javascript', src='js/main.js')

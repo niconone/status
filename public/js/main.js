@@ -10,9 +10,18 @@
   var statusBtn = document.querySelector('#status-send');
   var statuses = document.querySelector('#statuses');
   var notification = document.querySelector('#notification');
+  var feed = document.querySelector('#feed-profile-view');
+  var closePreview = feed.querySelector('#close');
+
   var account = {};
   var followingList = {};
   var followerList = {};
+
+  closePreview.onclick = function(ev) {
+    ev.preventDefault();
+    feed.classList.remove('on');
+    feed.querySelector('iframe').src = '';
+  };
 /*
   socket.on('dataack', function(data) {
 
@@ -117,13 +126,24 @@
     var time;
     var div;
     var button;
+    var a;
 
     function generateStatus(stat, type) {
       li = document.createElement('li');
+      a = document.createElement('a');
+      a.href = stat.account.publicURL + '/feed';
+      a.classList.add('user-feed');
+      a.textContent = stat.account.name || stat.account.id;
+      a.onclick = function(ev) {
+        ev.preventDefault();
+        feed.querySelector('iframe').src = this.href;
+        feed.classList.add('on');
+      };
+      li.appendChild(a);
       time = document.createElement('time');
       time.textContent = moment(parseInt(stat.created, 10)).fromNow();
       div = document.createElement('div');
-      div.innerHTML = stat.account.name + ': ' + stat.status;
+      div.innerHTML = stat.status;
       li.appendChild(time);
       li.appendChild(div);
       li.id = 'item-status-' + stat.created + '-' + stat.id;
@@ -293,6 +313,7 @@
       document.querySelector('#acct-url').value = data.account.publicURL;
       account.name = data.account.name;
       account.bio = data.account.bio;
+      account.publicURL = data.account.publicURL;
       break;
     case 'account.update':
       console.log('account details updated ', data.account);
@@ -303,6 +324,7 @@
       document.querySelector('#acct-url').value = data.account.publicURL;
       account.name = data.account.name;
       account.bio = data.account.bio;
+      account.publicURL = data.account.publicURL;
       break;
     }
   });

@@ -78,6 +78,11 @@ let routes = [
     }
   },
   {
+    method: 'GET',
+    path: '/feed',
+    handler: views.feed
+  },
+  {
     method: 'POST',
     path: '/authenticate',
     handler: account.authenticate
@@ -111,6 +116,11 @@ let routes = [
     method: 'POST',
     path: '/ext/unfollow',
     handler: connections.removeFollowerIncoming
+  },
+  {
+    method: 'GET',
+    path: '/ext/follower/ping',
+    handler: connections.isFollowingIncoming
   }
 ];
 
@@ -144,10 +154,16 @@ server.start(function(err) {
 
   io.on('connection', function(socket) {
     socket.on('identifier', function() {
+      if (!socket.handshake.headers.cookie) {
+        return;
+      }
       views.getID(socket);
     });
 
     socket.on('follow', function(data) {
+      if (!socket.handshake.headers.cookie) {
+        return;
+      }
       switch (data.type) {
       case 'follow.add':
         connections.addIDFollowing(socket, data);
@@ -162,6 +178,9 @@ server.start(function(err) {
     });
 
     socket.on('follower', function(data) {
+      if (!socket.handshake.headers.cookie) {
+        return;
+      }
       switch (data.type) {
       case 'follower.add':
         connections.addIDFollower(socket, data);
@@ -173,6 +192,9 @@ server.start(function(err) {
     });
 
     socket.on('status', function(data) {
+      if (!socket.handshake.headers.cookie) {
+        return;
+      }
       switch (data.type) {
       case 'status.getAll':
         statuses.getAll(socket);
@@ -186,7 +208,18 @@ server.start(function(err) {
       }
     });
 
+    socket.on('feed', function(data) {
+      switch (data.type) {
+      case 'feed.getAll':
+        statuses.feed(socket);
+        break;
+      }
+    });
+
     socket.on('account', function(data) {
+      if (!socket.handshake.headers.cookie) {
+        return;
+      }
       switch (data.type) {
       case 'account.get':
         account.get(socket);
