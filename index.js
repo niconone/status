@@ -21,7 +21,10 @@ let auth = {
 
 server.connection({
   host: conf.get('domain'),
-  port: conf.get('port')
+  port: conf.get('port'),
+  routes: {
+    cors: true
+  }
 });
 
 server.views({
