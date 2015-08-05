@@ -28,9 +28,13 @@
       }
     }
 
-    data.statuses.forEach(function(s) {
-      generateStatus(s.value);
-    });
+    if (data.type === 'feed.add') {
+      generateStatus(data.status);
+    } else {
+      data.statuses.forEach(function(s) {
+        generateStatus(s.value);
+      });
+    }
   });
 
   // Get user feed

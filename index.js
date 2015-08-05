@@ -152,6 +152,10 @@ server.start(function(err) {
 
   io = SocketIO.listen(server.listener);
 
+  io.use(function(socket, next) {
+    let cookies = socket.request.headers.cookie;
+  });
+
   io.on('connection', function(socket) {
     socket.on('identifier', function() {
       if (!socket.handshake.headers.cookie) {
@@ -209,6 +213,10 @@ server.start(function(err) {
     });
 
     socket.on('feed', function(data) {
+      console.log(socket.handshake.headers.cookie)
+      if (!socket.handshake.headers.cookie) {
+        return;
+      }
       switch (data.type) {
       case 'feed.getAll':
         statuses.feed(socket);
