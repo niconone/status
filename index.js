@@ -152,15 +152,8 @@ server.start(function(err) {
 
   io = SocketIO.listen(server.listener);
 
-  io.use(function(socket, next) {
-    let cookies = socket.request.headers.cookie;
-  });
-
   io.on('connection', function(socket) {
     socket.on('identifier', function() {
-      if (!socket.handshake.headers.cookie) {
-        return;
-      }
       views.getID(socket);
     });
 
