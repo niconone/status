@@ -3,7 +3,7 @@ extends layout
 block content
   if authenticated
     .content
-      section.left
+      section#profile-details
         h2 account details
         #profile
           label(for='identifier') your identifier
@@ -16,29 +16,28 @@ block content
             input(type='text', id='acct-url', placeholder='http://', required)
           button(type='button', id='account-update') update
 
-      section.right
-        h2 follow a new identifier
+      section#follow-details
+        h2 follow details
         label(for='peer-id') peer ID
           input(type='text', id='peer-id', placeholder='peer id', required)
         label(for='peer-domain') peer URL
           input(type='text', id='peer-domain', placeholder='http://', required)
         button(type='button', id='peer-connect') follow
 
+        #follows
+          h2 following
+          ul#followed
+
+          h2 followers
+          ul#followers
+
     section#status
       h2 Status updates accept markdown
       textarea(type='text', id='status-message', placeholder='enter status update', required)
       button(type='button', id='status-send') send
 
-    section#feed.left
-      h2 feed
+    section#feed
       ul#statuses
-
-    section#follows.right
-      h2 following
-      ul#followed
-
-      h2 followers
-      ul#followers
 
     #feed-profile-view
       iframe

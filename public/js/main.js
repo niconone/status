@@ -12,10 +12,30 @@
   var notification = document.querySelector('#notification');
   var feed = document.querySelector('#feed-profile-view');
   var closePreview = feed.querySelector('#close');
+  var profileDetails = document.querySelector('#profile-details h2');
+  var followDetails = document.querySelector('#follow-details h2');
 
   var account = {};
   var followingList = {};
   var followerList = {};
+
+  profileDetails.onclick = function(ev) {
+    var parent = ev.target.parentNode;
+    if (parent.classList.contains('on')) {
+      parent.classList.remove('on');
+    } else {
+      parent.classList.add('on');
+    }
+  };
+
+  followDetails.onclick = function(ev) {
+    var parent = ev.target.parentNode;
+    if (parent.classList.contains('on')) {
+      parent.classList.remove('on');
+    } else {
+      parent.classList.add('on');
+    }
+  };
 
   closePreview.onclick = function(ev) {
     ev.preventDefault();
@@ -238,6 +258,11 @@
         a = document.createElement('a');
         a.href = f.value.publicURL;
         a.textContent = f.value.name || f.value.id;
+        a.onclick = function(ev) {
+          ev.preventDefault();
+          feed.querySelector('iframe').src = this.href;
+          feed.classList.add('on');
+        };
         li.appendChild(a);
         li.id = 'follow-id-' + f.value.id;
         followed.appendChild(li);
@@ -257,7 +282,6 @@
     switch (data.type) {
     case 'follower.update':
       console.log(data.type, ': follower updating account and sending a notification ', acct);
-      notification.textContent = acct.name + ' updated their profile';
       showNotification();
       li = document.querySelector('#follower-id-' + acct.id);
       a = li.querySelector('a');

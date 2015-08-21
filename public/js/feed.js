@@ -16,7 +16,7 @@
       time = document.createElement('time');
       time.textContent = moment(parseInt(stat.created, 10)).fromNow();
       div = document.createElement('div');
-      div.innerHTML = stat.account.name + ': ' + stat.status;
+      div.innerHTML = stat.status;
       li.appendChild(time);
       li.appendChild(div);
       li.id = 'item-status-' + stat.created + '-' + stat.id;

@@ -7,9 +7,8 @@ body {
 section {
   margin: 3px 0;
   float: left;
+  clear: both;
   padding: 5px 10px;
-  border-top: 1px solid #111;
-  border-right: 1px solid #111;
 }
 
 header {
@@ -54,6 +53,7 @@ input[type=text], textarea {
   font-family: Muli, Arial, sans-serif;
   font-size: 0.9rem;
   margin: 5px 2px;
+  background-color: #fff;
 }
 
 form, ul {
@@ -83,11 +83,6 @@ textarea, input {
   font-weight: 200;
 }
 
-textarea:hover, input:hover, textarea:active, input:active {
-  background-color: #303638;
-  color: #fff;
-}
-
 :required {
   box-shadow: none;
 }
@@ -106,6 +101,29 @@ textarea {
   resize: vertical;
 }
 
+#profile-details, #follow-details {
+  height: 20px;
+  width: 150px;
+  overflow: hidden;
+  float: left;
+  clear: none;
+  background-color: #73e6ff;
+}
+
+#profile-details h2, #follow-details h2 {
+  cursor: pointer;
+}
+
+#follow-details {
+  float: right;
+}
+
+#profile-details.on, #follow-details.on {
+  height: auto;
+  width: 400px;
+  background-color: #f0ff70;
+}
+
 #feed-profile-view {
   display: none;
   opacity: 0;
@@ -116,8 +134,8 @@ textarea {
   top: 10px;
   right: 10px;
   bottom: 10px;
-  width: 50%;
   min-width: 400px;
+  width: 60%;
   transition-duration: 0.5s;
 }
 
@@ -131,6 +149,10 @@ textarea {
   width: 100%;
   height: 100%;
   border: 0;
+}
+
+#feed-profile li img {
+  max-width: 300px;
 }
 
 #feed-profile-view #close {
@@ -171,23 +193,6 @@ label[for=identifier] {
 .content {
   width: 100%;
   position: relative;
-  height: 140px;
-}
-
-.left, .right {
-  margin-bottom: 5px;
-  height: 100%;
-}
-
-.left {
-  float: left;
-  width: 60%;
-}
-
-.right {
-  float: right;
-  width: 33%;
-  margin-right: 5px;
 }
 
 #status {
@@ -197,19 +202,26 @@ label[for=identifier] {
 
 #feed-profile {
   border: 0;
-  width: 90%;
+  width: 95%;
+}
+
+#feed {
+  padding: 0;
+  width: 100%;
+}
+
+#feed a {
+  background-color: #70ffdc;
+  padding: 0 2px;
+  text-decoration: none;
+  color: #111;
 }
 
 #feed li, #feed-profile li {
-  width: 100%;
-  background-color: #fff;
+  background-color: #f1f1f1;
   position: relative;
-  float: left;
-  clear: both;
   margin-bottom: 5px;
-  border-top: 1px solid #111;
-  border-right: 1px solid #111;
-  padding-bottom: 20px;
+  padding: 5px 5px 20px 5px;
 }
 
 .actions {
@@ -226,7 +238,7 @@ label[for=identifier] {
   opacity: 1;
 }
 
-#feed li time {
+li time {
   font-style: italic;
   padding: 10px;
   display: inline-block;
@@ -238,7 +250,7 @@ label[for=identifier] {
   max-height: 500px;
 }
 
-#feed li p {
+#feed li p, #feed-profile li p {
   padding: 0 19px;
 }
 
