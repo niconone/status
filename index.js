@@ -161,9 +161,6 @@ server.start(function(err) {
     });
 
     socket.on('follow', function(data) {
-      if (!socket.handshake.headers.cookie) {
-        return;
-      }
       switch (data.type) {
       case 'follow.add':
         connections.addIDFollowing(socket, data);
@@ -178,9 +175,6 @@ server.start(function(err) {
     });
 
     socket.on('follower', function(data) {
-      if (!socket.handshake.headers.cookie) {
-        return;
-      }
       switch (data.type) {
       case 'follower.add':
         connections.addIDFollower(socket, data);
@@ -192,9 +186,6 @@ server.start(function(err) {
     });
 
     socket.on('status', function(data) {
-      if (!socket.handshake.headers.cookie) {
-        return;
-      }
       switch (data.type) {
       case 'status.getAll':
         statuses.getAll(socket);
@@ -210,9 +201,6 @@ server.start(function(err) {
 
     socket.on('feed', function(data) {
       console.log(socket.handshake.headers.cookie)
-      if (!socket.handshake.headers.cookie) {
-        return;
-      }
       switch (data.type) {
       case 'feed.getAll':
         statuses.feed(socket);
@@ -221,9 +209,6 @@ server.start(function(err) {
     });
 
     socket.on('account', function(data) {
-      if (!socket.handshake.headers.cookie) {
-        return;
-      }
       switch (data.type) {
       case 'account.get':
         account.get(socket);

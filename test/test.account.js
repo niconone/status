@@ -4,6 +4,7 @@ const should = require('should');
 const conf = require('nconf');
 const io = require('socket.io-client');
 const request = require('request');
+const child = require('child_process');
 
 const server = require('../').getServer();
 
@@ -19,6 +20,7 @@ let wsOpts = {
 };
 
 after(function() {
+  child.exec('rm -rf ./test/db');
   server.stop();
 });
 
@@ -79,7 +81,6 @@ describe('account.update', function() {
       socket.emit('account', data);
 
       socket.on('accountack', function(d) {
-        console.log(d);
         d.account.id.should.not.be.empty();
         d.account.name.should.equal(account.name);
         d.account.bio.should.equal(account.bio);

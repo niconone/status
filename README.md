@@ -10,6 +10,10 @@ Copy the default configuration and change the `password` property. The `password
 
     cp config.json.sample config.json
 
+### access domain
+
+If you have a server and your own domain, use that as your domain entry point to share to others. Otherwise, follow the steps below for a local server:
+
 [download ngrok and place it somewhere that you can execute it](https://ngrok.com/download)
 [sign up for an ngrok account](https://dashboard.ngrok.com/user/signup)
 
@@ -33,6 +37,14 @@ Note that if you restart your ngrok service, you will regenerate a new domain. I
 
 ## cat
 ![](https://dl.dropboxusercontent.com/u/37968874/gifs/cat-typing-hacking-keyboard-computer.gif)
+
+## tests
+
+    cp config.json.sample test/config.json
+
+Change the `db` value to "./test/db"
+
+    npm test
 
 ## license
 
