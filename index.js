@@ -66,7 +66,7 @@ server.ext('onPreResponse', function(request, reply) {
   ctx.code = error.output.statusCode || 500;
   ctx.httpMessage = http.STATUS_CODES[statusCode].toLowerCase();
 
-  console.log(error.stack || error);
+  console.log(ctx.httpMessage);
 
   return reply.view('error', ctx).code(statusCode);
 });

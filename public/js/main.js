@@ -11,25 +11,23 @@
   var statuses = document.querySelector('#statuses');
   var notification = document.querySelector('#notification');
   var feed = document.querySelector('#feed-profile-view');
-  var closePreview = feed.querySelector('#close');
+  var closePreview = feed.querySelector('.close');
   var profileDetails = document.querySelector('#profile-details h2');
   var followDetails = document.querySelector('#follow-details h2');
+  var profileClose = document.querySelector('#profile-details .close');
+  var followClose = document.querySelector('#follow-details .close');
 
   var account = {};
   var followingList = {};
   var followerList = {};
 
-  profileDetails.onclick = function(ev) {
+  profileDetails.onclick = profileClose.onclick =
+  followDetails.onclick = followClose.onclick = function(ev) {
     var parent = ev.target.parentNode;
-    if (parent.classList.contains('on')) {
-      parent.classList.remove('on');
-    } else {
-      parent.classList.add('on');
-    }
-  };
 
-  followDetails.onclick = function(ev) {
-    var parent = ev.target.parentNode;
+    if (ev.target.parentNode.classList.contains('actions')) {
+      parent = ev.target.parentNode.parentNode;
+    }
     if (parent.classList.contains('on')) {
       parent.classList.remove('on');
     } else {
@@ -48,7 +46,7 @@
     switch (data.type) {
       case 'follow.remove':
         dataack.notification = '(following) removed you ' + data.account.id;
-        delete followingList[data.account.id];
+        devare followingList[data.account.id];
 
         socket.emit('follow', {
           type: 'follow.remove',
@@ -58,7 +56,7 @@
 
       case 'follower.remove':
         dataack.notification = '(follower) removed you ' + data.account.id;
-        delete followerList[data.account.id];
+        devare followerList[data.account.id];
 
         socket.emit('follower', {
           type: 'follower.remove',
@@ -175,8 +173,8 @@
       button.onclick = function(ev) {
         ev.preventDefault();
 
-        if (confirm('Confirm status deletion?')) {
-          console.log('deleting');
+        if (confirm('Confirm status devarion?')) {
+          console.log('devaring');
           socket.emit('status', {
             type: 'status.remove',
             key: this.id
@@ -210,10 +208,23 @@
     }
   });
 
+  function updateFollowing(data) {
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = data.publicURL;
+    a.textContent = data.name || data.id;
+    a.onclick = function(ev) {
+      ev.preventDefault();
+      feed.querySelector('iframe').src = this.href;
+      feed.classList.add('on');
+    };
+    li.appendChild(a);
+    li.id = 'follow-id-' + data.id;
+    followed.appendChild(li);
+  }
+
   // Notifications from following
   socket.on('followack', function(data) {
-    var li;
-    var a;
     var acct = data.account;
 
     console.log('Received', data);
@@ -223,8 +234,8 @@
       console.log(data.type, ': updating acct and sending followers a notification ', acct);
       notification.textContent = acct.name + ' updated their profile';
       showNotification();
-      li = document.querySelector('#follow-id-' + acct.id);
-      a = li.querySelector('a');
+      var li = document.querySelector('#follow-id-' + acct.id);
+      var a = li.querySelector('a');
       a.href = acct.publicURL;
       a.textContent = acct.name || acct.id;
       break;
@@ -233,13 +244,7 @@
       if (document.querySelector('#follow-id-' + acct.id)) {
         break;
       }
-      li = document.createElement('li');
-      a = document.createElement('a');
-      a.href = acct.publicURL;
-      a.textContent = acct.name || acct.id;
-      li.appendChild(a);
-      li.id = 'follow-id-' + acct.id;
-      followed.appendChild(li);
+      updateFollowing(acct);
       break;
     case 'follow.remove':
       console.log(data.type, ': unfollowing acct and sending them a notification', acct);
@@ -254,27 +259,29 @@
 
       data.following.forEach(function(f) {
         followingList[f.value.id] = f.value;
-        li = document.createElement('li');
-        a = document.createElement('a');
-        a.href = f.value.publicURL;
-        a.textContent = f.value.name || f.value.id;
-        a.onclick = function(ev) {
-          ev.preventDefault();
-          feed.querySelector('iframe').src = this.href;
-          feed.classList.add('on');
-        };
-        li.appendChild(a);
-        li.id = 'follow-id-' + f.value.id;
-        followed.appendChild(li);
+        updateFollowing(f.value);
       });
       break;
     }
   });
 
+  function updateFollowers(data) {
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = data.publicURL;
+    a.textContent = data.name || data.id;
+    a.onclick = function(ev) {
+      ev.preventDefault();
+      feed.querySelector('iframe').src = this.href;
+      feed.classList.add('on');
+    };
+    li.appendChild(a);
+    li.id = 'follower-id-' + data.id;
+    followers.appendChild(li);
+  }
+
   // Notifications from followers
   socket.on('followerack', function(data) {
-    var li;
-    var a;
     var acct = data.account;
 
     console.log('Received', data);
@@ -283,8 +290,8 @@
     case 'follower.update':
       console.log(data.type, ': follower updating account and sending a notification ', acct);
       showNotification();
-      li = document.querySelector('#follower-id-' + acct.id);
-      a = li.querySelector('a');
+      var li = document.querySelector('#follower-id-' + acct.id);
+      var a = li.querySelector('a');
       a.href = acct.publicURL;
       a.textContent = acct.name || acct.id;
       break;
@@ -295,13 +302,7 @@
       if (document.querySelector('#follower-id-' + acct.id)) {
         break;
       }
-      li = document.createElement('li');
-      a = document.createElement('a');
-      a.href = acct.publicURL;
-      a.textContent = acct.name || acct.id;
-      li.appendChild(a);
-      li.id = 'follower-id-' + acct.id;
-      followers.appendChild(li);
+      updateFollowers(acct);
       break;
     case 'follower.remove':
       console.log(data.type, ': follower removed you and is sending a notification ', acct);
@@ -316,39 +317,32 @@
 
       data.followers.forEach(function(f) {
         followerList[f.value.id] = f.value;
-        li = document.createElement('li');
-        a = document.createElement('a');
-        a.href = f.value.publicURL;
-        a.textContent = f.value.name || f.value.id;
-        li.appendChild(a);
-        li.id = 'follower-id-' + f.value.id;
-        followers.appendChild(li);
+        updateFollowers(f.value);
       });
       break;
     }
   });
 
+  function updateAccountDetails(data) {
+    document.querySelector('#acct-name').value = data.account.name;
+    document.querySelector('#acct-bio').value = data.account.bio;
+    document.querySelector('#acct-url').value = data.account.publicURL;
+    account.name = data.account.name;
+    account.bio = data.account.bio;
+    account.publicURL = data.account.publicURL;
+  }
+
   // Update the server with your new account changes
   socket.on('accountack', function(data) {
     switch (data.type) {
     case 'account.get':
-      document.querySelector('#acct-name').value = data.account.name;
-      document.querySelector('#acct-bio').value = data.account.bio;
-      document.querySelector('#acct-url').value = data.account.publicURL;
-      account.name = data.account.name;
-      account.bio = data.account.bio;
-      account.publicURL = data.account.publicURL;
+      updateAccountDetails(data);
       break;
     case 'account.update':
       console.log('account details updated ', data.account);
       notification.textContent = 'your profile is updated';
       showNotification();
-      document.querySelector('#acct-name').value = data.account.name;
-      document.querySelector('#acct-bio').value = data.account.bio;
-      document.querySelector('#acct-url').value = data.account.publicURL;
-      account.name = data.account.name;
-      account.bio = data.account.bio;
-      account.publicURL = data.account.publicURL;
+      updateAccountDetails(data);
       break;
     }
   });

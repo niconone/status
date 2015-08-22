@@ -4,9 +4,9 @@ p2p status updates. decentralized.
 
 ## setup
 
-Install [iojs](https://iojs.org) or [babel](https://babeljs.io)
+Install [iojs](https://iojs.org)
 
-Copy the default configuration and change the `password` property. The `password` is for protecting your web interface from being accessible by others but allowing them to still ping for API requests from your machine.
+Copy the default configuration and change the `password` property. The `password` is for protecting your dashboard interface from being accessible by others but allowing them to still connect for API requests from your machine.
 
     cp config.json.sample config.json
 

@@ -5,6 +5,8 @@ block content
     .content
       section#profile-details
         h2 account details
+        .actions
+          button(type='button', class='close') x
         #profile
           label(for='identifier') your identifier
             span#identifier= identifier
@@ -18,6 +20,8 @@ block content
 
       section#follow-details
         h2 follow details
+        .actions
+          button(type='button', class='close') x
         label(for='peer-id') peer ID
           input(type='text', id='peer-id', placeholder='peer id', required)
         label(for='peer-domain') peer URL
@@ -32,7 +36,7 @@ block content
           ul#followers
 
     section#status
-      h2 Status updates accept markdown
+      p Status updates accept markdown
       textarea(type='text', id='status-message', placeholder='enter status update', required)
       button(type='button', id='status-send') send
 
@@ -42,7 +46,7 @@ block content
     #feed-profile-view
       iframe
       .actions
-        button(type='button', id='close') x
+        button(type='button', class='close') x
   else
     form(method='post', action='/authenticate')
       input(type='text', name='password')
@@ -50,4 +54,4 @@ block content
 
 block script
   if authenticated
-    script(type='text/javascript', src='js/main.js')
+    script(type='text/javascript', src='/js/main.js')

@@ -20,19 +20,24 @@ header span {
   font-size: 1.6rem;
 }
 
+header, label {
+  text-transform: uppercase;
+}
+
 header, h2, label {
   display: inline-block;
   color: #111;
-  font-weight: 100;
+  font-weight: 200;
   font-size: 1rem;
   padding: 0;
-  text-transform: uppercase;
 }
 
 h2 {
   margin: 0;
   float: left;
   width: 100%;
+  font-weight: 300;
+  font-size: 1.3rem;
 }
 
 a {
@@ -44,7 +49,7 @@ button {
   color: #ccc;
   font-size: 1.12rem;
   text-transform: uppercase;
-  font-weight: 100;
+  font-weight: 200;
   border: 0;
 }
 
@@ -102,16 +107,22 @@ textarea {
 }
 
 #profile-details, #follow-details {
-  height: 20px;
-  width: 150px;
+  height: 30px;
+  width: 200px;
   overflow: hidden;
   float: left;
   clear: none;
   background-color: #73e6ff;
+  position: relative;
+}
+
+#profile-details .close, #follow-details .close {
+  display: none;
 }
 
 #profile-details h2, #follow-details h2 {
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 #follow-details {
@@ -121,14 +132,18 @@ textarea {
 #profile-details.on, #follow-details.on {
   height: auto;
   width: 400px;
+  padding: auto auto 50px;
   background-color: #f0ff70;
+}
+
+#profile-details.on .close, #follow-details.on .close {
+  display: block;
 }
 
 #feed-profile-view {
   display: none;
   opacity: 0;
   background-color: #fff;
-  border: 1px solid #111;
   position: fixed;
   z-index: 3;
   top: 10px;
@@ -151,11 +166,29 @@ textarea {
   border: 0;
 }
 
-#feed-profile li img {
+body.feed {
+  background-color: #5aeeff;
+  border: 2px solid #5aeeff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+body.feed #statuses li {
+  background-color: #fcfcfc;
+}
+
+body.feed #statuses li img {
   max-width: 300px;
 }
 
-#feed-profile-view #close {
+body.feed #statuses li p {
+  padding: 10px;
+}
+
+.close {
   bottom: 0;
 }
 
@@ -201,11 +234,11 @@ label[for=identifier] {
 }
 
 #feed-profile {
-  border: 0;
   width: 95%;
 }
 
 #feed {
+  background-color: #fcfcfc;
   padding: 0;
   width: 100%;
 }
@@ -218,10 +251,10 @@ label[for=identifier] {
 }
 
 #feed li, #feed-profile li {
-  background-color: #f1f1f1;
   position: relative;
   margin-bottom: 5px;
   padding: 5px 5px 20px 5px;
+  border-bottom: 15px solid #fff;
 }
 
 .actions {
@@ -231,7 +264,7 @@ label[for=identifier] {
 }
 
 .actions button {
-  opacity: 0.1;
+  opacity: 0.4;
 }
 
 .actions button:hover, .actions button:active {
