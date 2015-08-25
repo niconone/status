@@ -193,18 +193,18 @@
     }
 
     switch (data.type) {
-    case 'status.getAll':
-      data.statuses.forEach(function(s) {
-        generateStatus(s.value);
-      });
-      break;
-    case 'status.add':
-      generateStatus(data.status, 'add');
-      break;
-    case 'status.remove':
-      console.log(data.status, statuses.querySelector('#item-' + data.status));
-      statuses.removeChild(statuses.querySelector('#item-' + data.status));
-      break;
+      case 'status.getAll':
+        data.statuses.forEach(function(s) {
+          generateStatus(s.value);
+        });
+        break;
+      case 'status.add':
+        generateStatus(data.status, 'add');
+        break;
+      case 'status.remove':
+        console.log(data.status, statuses.querySelector('#item-' + data.status));
+        statuses.removeChild(statuses.querySelector('#item-' + data.status));
+        break;
     }
   });
 

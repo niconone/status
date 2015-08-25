@@ -162,61 +162,60 @@ server.start(function(err) {
 
     socket.on('follow', function(data) {
       switch (data.type) {
-      case 'follow.add':
-        connections.addIDFollowing(socket, data);
-        break;
-      case 'follow.getAll':
-        connections.getAllFollowing(socket);
-        break;
-      case 'follow.remove':
-        connections.removeIDFollowing(socket. data.account.id);
-        break;
+        case 'follow.add':
+          connections.addIDFollowing(socket, data);
+          break;
+        case 'follow.getAll':
+          connections.getAllFollowing(socket);
+          break;
+        case 'follow.remove':
+          connections.removeIDFollowing(socket. data.account.id);
+          break;
       }
     });
 
     socket.on('follower', function(data) {
       switch (data.type) {
-      case 'follower.add':
-        connections.addIDFollower(socket, data);
-        break;
-      case 'follower.getAll':
-        connections.getAllFollowers(socket);
-        break;
+        case 'follower.add':
+          connections.addIDFollower(socket, data);
+          break;
+        case 'follower.getAll':
+          connections.getAllFollowers(socket);
+          break;
       }
     });
 
     socket.on('status', function(data) {
       switch (data.type) {
-      case 'status.getAll':
-        statuses.getAll(socket);
-        break;
-      case 'status.add':
-        statuses.add(socket, data);
-        break;
-      case 'status.remove':
-        statuses.remove(socket, data);
-        break;
+        case 'status.getAll':
+          statuses.getAll(socket);
+          break;
+        case 'status.add':
+          statuses.add(socket, data);
+          break;
+        case 'status.remove':
+          statuses.remove(socket, data);
+          break;
       }
     });
 
     socket.on('feed', function(data) {
-      console.log(socket.handshake.headers.cookie)
       switch (data.type) {
-      case 'feed.getAll':
-        statuses.feed(socket);
-        break;
+        case 'feed.getAll':
+          statuses.feed(socket);
+          break;
       }
     });
 
     socket.on('account', function(data) {
       switch (data.type) {
-      case 'account.get':
-        account.get(socket);
-        break;
-      case 'account.update':
-        console.log('updating account changes ', data);
-        account.update(socket, data);
-        break;
+        case 'account.get':
+          account.get(socket);
+          break;
+        case 'account.update':
+          console.log('updating account changes ', data);
+          account.update(socket, data);
+          break;
       }
     });
   });
