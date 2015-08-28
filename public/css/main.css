@@ -1,6 +1,6 @@
 body {
   padding: 0;
-  margin: 0px;
+  margin: 0;
   font-family: Muli, Arial, sans-serif;
 }
 
@@ -94,7 +94,6 @@ textarea, input {
 
 :invalid, :-moz-ui-invalid, :-moz-submit-invalid {
   box-shadow: none;
-  border: 1px dashed #f00;
 }
 
 textarea {
@@ -107,13 +106,18 @@ textarea {
 }
 
 #profile-details, #follow-details {
-  height: 30px;
-  width: 200px;
+  height: 20px;
+  width: 100px;
   overflow: hidden;
   float: left;
   clear: none;
-  background-color: #73e6ff;
+  background-color: #111;
   position: relative;
+  border: 2px solid #fff;
+}
+
+#profile-details {
+  border-left: 4px solid #fff;
 }
 
 #profile-details .close, #follow-details .close {
@@ -123,17 +127,19 @@ textarea {
 #profile-details h2, #follow-details h2 {
   cursor: pointer;
   text-transform: uppercase;
-}
-
-#follow-details {
-  float: right;
+  color: #fff;
+  font-size: 1rem;
 }
 
 #profile-details.on, #follow-details.on {
   height: auto;
   width: 400px;
   padding: auto auto 50px;
-  background-color: #f0ff70;
+  background-color: #f2f2f2;
+}
+
+#profile-details.on h2, #follow-details.on h2 {
+  color: #111;
 }
 
 #profile-details.on .close, #follow-details.on .close {

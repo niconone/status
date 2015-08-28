@@ -1,40 +1,42 @@
 extends layout
 
+block header
+  if authenticated
+    section#profile-details
+      h2 account details
+      .actions
+        button(type='button', class='close') x
+      #profile
+        label(for='identifier') your identifier
+          span#identifier= identifier
+        label(for='acct-name') name
+          input(type='text', id='acct-name', placeholder='name', required)
+        label(for='acct-bio') bio
+          input(type='text', id='acct-bio', placeholder='bio')
+        label(for='acct-url') public URL
+          input(type='text', id='acct-url', placeholder='http://', required)
+        button(type='button', id='account-update') update
+
+    section#follow-details
+      h2 follow details
+      .actions
+        button(type='button', class='close') x
+      label(for='peer-id') peer ID
+        input(type='text', id='peer-id', placeholder='peer id', required)
+      label(for='peer-domain') peer URL
+        input(type='text', id='peer-domain', placeholder='http://', required)
+      button(type='button', id='peer-connect') follow
+
+      #follows
+        h2 following
+        ul#followed
+
+        h2 followers
+        ul#followers
+    #notification
+
 block content
   if authenticated
-    .content
-      section#profile-details
-        h2 account details
-        .actions
-          button(type='button', class='close') x
-        #profile
-          label(for='identifier') your identifier
-            span#identifier= identifier
-          label(for='acct-name') name
-            input(type='text', id='acct-name', placeholder='name', required)
-          label(for='acct-bio') bio
-            input(type='text', id='acct-bio', placeholder='bio')
-          label(for='acct-url') public URL
-            input(type='text', id='acct-url', placeholder='http://', required)
-          button(type='button', id='account-update') update
-
-      section#follow-details
-        h2 follow details
-        .actions
-          button(type='button', class='close') x
-        label(for='peer-id') peer ID
-          input(type='text', id='peer-id', placeholder='peer id', required)
-        label(for='peer-domain') peer URL
-          input(type='text', id='peer-domain', placeholder='http://', required)
-        button(type='button', id='peer-connect') follow
-
-        #follows
-          h2 following
-          ul#followed
-
-          h2 followers
-          ul#followers
-
     section#status
       p Status updates accept markdown
       textarea(type='text', id='status-message', placeholder='enter status update', required)

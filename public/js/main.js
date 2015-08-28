@@ -230,38 +230,38 @@
     console.log('Received', data);
 
     switch (data.type) {
-    case 'follow.update':
-      console.log(data.type, ': updating acct and sending followers a notification ', acct);
-      notification.textContent = acct.name + ' updated their profile';
-      showNotification();
-      var li = document.querySelector('#follow-id-' + acct.id);
-      var a = li.querySelector('a');
-      a.href = acct.publicURL;
-      a.textContent = acct.name || acct.id;
-      break;
-    case 'follow.add':
-      console.log(data.type, ': following acct and sending them a notification ', acct);
-      if (document.querySelector('#follow-id-' + acct.id)) {
+      case 'follow.update':
+        console.log(data.type, ': updating acct and sending followers a notification ', acct);
+        notification.textContent = acct.name + ' updated their profile';
+        showNotification();
+        var li = document.querySelector('#follow-id-' + acct.id);
+        var a = li.querySelector('a');
+        a.href = acct.publicURL;
+        a.textContent = acct.name || acct.id;
         break;
-      }
-      updateFollowing(acct);
-      break;
-    case 'follow.remove':
-      console.log(data.type, ': unfollowing acct and sending them a notification', acct);
-      followed.removeChild(followed.querySelector('#follow-id-' + acct.id));
-      break;
-    case 'follow.getAll':
-      console.log(data.type, ': getting all following ', data.following);
+      case 'follow.add':
+        console.log(data.type, ': following acct and sending them a notification ', acct);
+        if (document.querySelector('#follow-id-' + acct.id)) {
+          break;
+        }
+        updateFollowing(acct);
+        break;
+      case 'follow.remove':
+        console.log(data.type, ': unfollowing acct and sending them a notification', acct);
+        followed.removeChild(followed.querySelector('#follow-id-' + acct.id));
+        break;
+      case 'follow.getAll':
+        console.log(data.type, ': getting all following ', data.following);
 
-      while (followers.hasChildNodes()) {
-        followed.removeChild(followed.firstChild);
-      }
+        while (followers.hasChildNodes()) {
+          followed.removeChild(followed.firstChild);
+        }
 
-      data.following.forEach(function(f) {
-        followingList[f.value.id] = f.value;
-        updateFollowing(f.value);
-      });
-      break;
+        data.following.forEach(function(f) {
+          followingList[f.value.id] = f.value;
+          updateFollowing(f.value);
+        });
+        break;
     }
   });
 
@@ -287,39 +287,39 @@
     console.log('Received', data);
 
     switch (data.type) {
-    case 'follower.update':
-      console.log(data.type, ': follower updating account and sending a notification ', acct);
-      showNotification();
-      var li = document.querySelector('#follower-id-' + acct.id);
-      var a = li.querySelector('a');
-      a.href = acct.publicURL;
-      a.textContent = acct.name || acct.id;
-      break;
-    case 'follower.add':
-      console.log(data.type, ': follower added you and is sending a notification ', acct);
-      notification.textContent = acct.name + ' is following your statuses';
-      showNotification();
-      if (document.querySelector('#follower-id-' + acct.id)) {
+      case 'follower.update':
+        console.log(data.type, ': follower updating account and sending a notification ', acct);
+        showNotification();
+        var li = document.querySelector('#follower-id-' + acct.id);
+        var a = li.querySelector('a');
+        a.href = acct.publicURL;
+        a.textContent = acct.name || acct.id;
         break;
-      }
-      updateFollowers(acct);
-      break;
-    case 'follower.remove':
-      console.log(data.type, ': follower removed you and is sending a notification ', acct);
-      followers.removeChild(document.querySelector('#follower-id-' + acct.id));
-      break;
-    case 'follower.getAll':
-      console.log(data.type, ': getting all followers ', data.followers);
+      case 'follower.add':
+        console.log(data.type, ': follower added you and is sending a notification ', acct);
+        notification.textContent = acct.name + ' is following your statuses';
+        showNotification();
+        if (document.querySelector('#follower-id-' + acct.id)) {
+          break;
+        }
+        updateFollowers(acct);
+        break;
+      case 'follower.remove':
+        console.log(data.type, ': follower removed you and is sending a notification ', acct);
+        followers.removeChild(document.querySelector('#follower-id-' + acct.id));
+        break;
+      case 'follower.getAll':
+        console.log(data.type, ': getting all followers ', data.followers);
 
-      while (followers.hasChildNodes()) {
-        followers.removeChild(followers.firstChild);
-      }
+        while (followers.hasChildNodes()) {
+          followers.removeChild(followers.firstChild);
+        }
 
-      data.followers.forEach(function(f) {
-        followerList[f.value.id] = f.value;
-        updateFollowers(f.value);
-      });
-      break;
+        data.followers.forEach(function(f) {
+          followerList[f.value.id] = f.value;
+          updateFollowers(f.value);
+        });
+        break;
     }
   });
 
@@ -335,15 +335,15 @@
   // Update the server with your new account changes
   socket.on('accountack', function(data) {
     switch (data.type) {
-    case 'account.get':
-      updateAccountDetails(data);
-      break;
-    case 'account.update':
-      console.log('account details updated ', data.account);
-      notification.textContent = 'your profile is updated';
-      showNotification();
-      updateAccountDetails(data);
-      break;
+      case 'account.get':
+        updateAccountDetails(data);
+        break;
+      case 'account.update':
+        console.log('account details updated ', data.account);
+        notification.textContent = 'your profile is updated';
+        showNotification();
+        updateAccountDetails(data);
+        break;
     }
   });
 
