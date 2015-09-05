@@ -169,7 +169,7 @@ server.start(function(err) {
           connections.getAllFollowing(socket);
           break;
         case 'follow.remove':
-          connections.removeIDFollowing(socket. data.account.id);
+          connections.removeIDFollowing(socket, data.account.id);
           break;
       }
     });

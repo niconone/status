@@ -40,33 +40,7 @@
     feed.classList.remove('on');
     feed.querySelector('iframe').src = '';
   };
-/*
-  socket.on('dataack', function(data) {
 
-    switch (data.type) {
-      case 'follow.remove':
-        dataack.notification = '(following) removed you ' + data.account.id;
-        devare followingList[data.account.id];
-
-        socket.emit('follow', {
-          type: 'follow.remove',
-          account: data.account
-        });
-        break;
-
-      case 'follower.remove':
-        dataack.notification = '(follower) removed you ' + data.account.id;
-        devare followerList[data.account.id];
-
-        socket.emit('follower', {
-          type: 'follower.remove',
-          account: data.account
-        });
-        break;
-    }
-
-  });
-*/
   // Follow someone else's account
   followBtn.onclick = function(ev) {
     ev.preventDefault();
@@ -173,8 +147,8 @@
       button.onclick = function(ev) {
         ev.preventDefault();
 
-        if (confirm('Confirm status devarion?')) {
-          console.log('devaring');
+        if (confirm('Confirm status deletion?')) {
+          console.log('deleting');
           socket.emit('status', {
             type: 'status.remove',
             key: this.id
@@ -218,7 +192,23 @@
       feed.querySelector('iframe').src = this.href;
       feed.classList.add('on');
     };
+    var button = document.createElement('button');
+    button.textContent = 'x';
+    button.onclick = function(ev) {
+      ev.preventDefault();
+
+      if (confirm('Confirm unfollow?')) {
+        console.log('unfollowing ', data.id);
+        socket.emit('follow', {
+          type: 'follow.remove',
+          account: {
+            id: data.id
+          }
+        });
+      }
+    };
     li.appendChild(a);
+    li.appendChild(button);
     li.id = 'follow-id-' + data.id;
     followed.appendChild(li);
   }
@@ -233,11 +223,13 @@
       case 'follow.update':
         console.log(data.type, ': updating acct and sending followers a notification ', acct);
         notification.textContent = acct.name + ' updated their profile';
-        showNotification();
+        //showNotification();
         var li = document.querySelector('#follow-id-' + acct.id);
-        var a = li.querySelector('a');
-        a.href = acct.publicURL;
-        a.textContent = acct.name || acct.id;
+        if (li) {
+          var a = li.querySelector('a');
+          a.href = acct.publicURL + '/feed';
+          a.textContent = acct.name || acct.id;
+        }
         break;
       case 'follow.add':
         console.log(data.type, ': following acct and sending them a notification ', acct);
@@ -248,7 +240,8 @@
         break;
       case 'follow.remove':
         console.log(data.type, ': unfollowing acct and sending them a notification', acct);
-        followed.removeChild(followed.querySelector('#follow-id-' + acct.id));
+        console.log(document.querySelector('#follow-id-' + acct.id))
+        followed.removeChild(document.querySelector('#follow-id-' + acct.id));
         break;
       case 'follow.getAll':
         console.log(data.type, ': getting all following ', data.following);
@@ -289,11 +282,13 @@
     switch (data.type) {
       case 'follower.update':
         console.log(data.type, ': follower updating account and sending a notification ', acct);
-        showNotification();
+        //showNotification();
         var li = document.querySelector('#follower-id-' + acct.id);
-        var a = li.querySelector('a');
-        a.href = acct.publicURL;
-        a.textContent = acct.name || acct.id;
+        if (li) {
+          var a = li.querySelector('a');
+          a.href = acct.publicURL + '/feed';
+          a.textContent = acct.name || acct.id;
+        }
         break;
       case 'follower.add':
         console.log(data.type, ': follower added you and is sending a notification ', acct);

@@ -12,6 +12,8 @@ conf.argv().env().file({ file: 'test/config.json' });
 
 const HOST = 'http://127.0.0.1:' + conf.get('port');
 
+let userID = 111;
+
 let wsOpts = {
   transports: ['websocket'],
   'force new connection': true,
@@ -27,7 +29,7 @@ after(function() {
 describe('connections', function() {
   it('should follow an account', function(done) {
     let account2 = {
-      id: 111,
+      id: userID,
       name: 'test2',
       bio: '?',
       publicURL: 'http://test2.ngrok.com'
@@ -96,6 +98,25 @@ describe('connections', function() {
       socket.on('followack', function(data) {
         data.type.should.equal('follow.getAll');
         data.following.length.should.equal(1);
+        socket.disconnect();
+        done();
+      });
+    });
+  });
+
+  it('should unfollow a user', function(done) {
+    let socket = io.connect(HOST, wsOpts);
+
+    socket.on('connect', function() {
+      socket.emit('follow', {
+        type: 'follow.remove',
+        account: {
+          id: userID
+        }
+      });
+
+      socket.on('followack', function(data) {
+        console.log(data);
         socket.disconnect();
         done();
       });
